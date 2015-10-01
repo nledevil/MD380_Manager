@@ -427,8 +427,10 @@ namespace MD380_Manager
                 lstGrpAvail.ValueMember = "GUID";
                 lstGrpAvail.DataSource = unassignedContacts;
                 txtGroupListName.Text = ((GroupList)lstGroupList.SelectedItem).GroupListName;
-                lstGrpAssn.SelectedIndex = (adx > (lstGrpAssn.Items.Count - 1) ? lstGrpAssn.Items.Count - 1 : lstGrpAssn.SelectedIndex);
-                lstGrpAvail.SelectedIndex = (udx > (lstGrpAvail.Items.Count - 1) ? lstGrpAvail.Items.Count - 1 : lstGrpAvail.SelectedIndex);
+                if (adx > -1)
+                    lstGrpAssn.SelectedIndex = (adx > (lstGrpAssn.Items.Count - 1) ? lstGrpAssn.Items.Count - 1 : adx);
+                if (udx > -1)
+                    lstGrpAvail.SelectedIndex = (udx > (lstGrpAvail.Items.Count - 1) ? lstGrpAvail.Items.Count - 1 : udx);
             }
         }
         private void btnGrpLstMoveUp_Click(object sender, EventArgs e)
@@ -525,8 +527,10 @@ namespace MD380_Manager
                 lstZnChanAvail.DataSource = unassignedChannels;
                 txtZnName.Text = ((ZoneList)lstZones.SelectedItem).ZoneName;
 
-                lstZnChanAssigned.SelectedIndex = (adx > (lstZnChanAssigned.Items.Count - 1) ? lstZnChanAssigned.Items.Count - 1 : lstZnChanAssigned.SelectedIndex);
-                lstZnChanAvail.SelectedIndex = (udx > (lstZnChanAvail.Items.Count - 1) ? lstZnChanAvail.Items.Count - 1 : lstZnChanAvail.SelectedIndex);
+                if (adx > -1)
+                    lstZnChanAssigned.SelectedIndex = (adx > (lstZnChanAssigned.Items.Count - 1) ? lstZnChanAssigned.Items.Count - 1 : adx);
+                if (udx > -1)
+                    lstZnChanAvail.SelectedIndex = (udx > (lstZnChanAvail.Items.Count - 1) ? lstZnChanAvail.Items.Count - 1 : udx);
             }
         }
         private void btnZnMvUp_Click(object sender, EventArgs e)
