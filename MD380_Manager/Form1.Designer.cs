@@ -30,13 +30,13 @@ namespace MD380_Manager
         /// </summary>
         private void InitializeComponent()
         {
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn10 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewComboBoxColumn gridViewComboBoxColumn4 = new Telerik.WinControls.UI.GridViewComboBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn4 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewComboBoxColumn gridViewComboBoxColumn2 = new Telerik.WinControls.UI.GridViewComboBoxColumn();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn11 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewCheckBoxColumn gridViewCheckBoxColumn4 = new Telerik.WinControls.UI.GridViewCheckBoxColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn12 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.TableViewDefinition tableViewDefinition4 = new Telerik.WinControls.UI.TableViewDefinition();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn5 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewCheckBoxColumn gridViewCheckBoxColumn2 = new Telerik.WinControls.UI.GridViewCheckBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn6 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.TableViewDefinition tableViewDefinition2 = new Telerik.WinControls.UI.TableViewDefinition();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -112,6 +112,7 @@ namespace MD380_Manager
             this.label11 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.numericCallToneAlertDurationUpDown1 = new MD380_Manager.NumericCallToneAlertDurationUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.cmboGnTalkPermTone = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -122,6 +123,7 @@ namespace MD380_Manager
             this.chkGnSavePreamble = new System.Windows.Forms.CheckBox();
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.numericMenuHangTimeUpDown1 = new MD380_Manager.CustomControls.NumericMenuHangTimeUpDown();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.chkMnuEditList = new System.Windows.Forms.CheckBox();
             this.chkMnuScan = new System.Windows.Forms.CheckBox();
@@ -187,6 +189,16 @@ namespace MD380_Manager
             this.btnScnMvUp = new System.Windows.Forms.Button();
             this.lstScanLists = new System.Windows.Forms.ListBox();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.cmboSLSampleTime = new System.Windows.Forms.ComboBox();
+            this.label65 = new System.Windows.Forms.Label();
+            this.cmboSLSignalingHoldTime = new System.Windows.Forms.ComboBox();
+            this.label63 = new System.Windows.Forms.Label();
+            this.cmboSLTXCH = new System.Windows.Forms.ComboBox();
+            this.label64 = new System.Windows.Forms.Label();
+            this.cmboSLPriorityB = new System.Windows.Forms.ComboBox();
+            this.label61 = new System.Windows.Forms.Label();
+            this.cmboSLPriorityA = new System.Windows.Forms.ComboBox();
+            this.label62 = new System.Windows.Forms.Label();
             this.btnScnChanMvUp = new System.Windows.Forms.Button();
             this.btnScnChanMvDwn = new System.Windows.Forms.Button();
             this.btnScnRemove = new System.Windows.Forms.Button();
@@ -272,18 +284,6 @@ namespace MD380_Manager
             this.btnCHMvDwn = new System.Windows.Forms.Button();
             this.btnCHMvUp = new System.Windows.Forms.Button();
             this.lstChannels = new System.Windows.Forms.ListBox();
-            this.numericCallToneAlertDurationUpDown1 = new MD380_Manager.NumericCallToneAlertDurationUpDown();
-            this.numericMenuHangTimeUpDown1 = new MD380_Manager.CustomControls.NumericMenuHangTimeUpDown();
-            this.cmboSCPriorityB = new System.Windows.Forms.ComboBox();
-            this.label61 = new System.Windows.Forms.Label();
-            this.cmboSLPriorityA = new System.Windows.Forms.ComboBox();
-            this.label62 = new System.Windows.Forms.Label();
-            this.cmboSLSignalingHoldTime = new System.Windows.Forms.ComboBox();
-            this.label63 = new System.Windows.Forms.Label();
-            this.cmboSLTXCH = new System.Windows.Forms.ComboBox();
-            this.label64 = new System.Windows.Forms.Label();
-            this.cmboSLSampleTime = new System.Windows.Forms.ComboBox();
-            this.label65 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -304,9 +304,11 @@ namespace MD380_Manager
             ((System.ComponentModel.ISupportInitialize)(this.numAnlgHngTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numGnDigHngTime)).BeginInit();
             this.groupBox9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericCallToneAlertDurationUpDown1)).BeginInit();
             this.groupBox8.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMenuHangTimeUpDown1)).BeginInit();
             this.groupBox7.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -324,8 +326,6 @@ namespace MD380_Manager
             this.groupBox20.SuspendLayout();
             this.groupBox19.SuspendLayout();
             this.groupBox18.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericCallToneAlertDurationUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMenuHangTimeUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -359,7 +359,7 @@ namespace MD380_Manager
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -1192,6 +1192,23 @@ namespace MD380_Manager
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Alert Tone";
             // 
+            // numericCallToneAlertDurationUpDown1
+            // 
+            this.numericCallToneAlertDurationUpDown1.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericCallToneAlertDurationUpDown1.Location = new System.Drawing.Point(208, 69);
+            this.numericCallToneAlertDurationUpDown1.Maximum = new decimal(new int[] {
+            1200,
+            0,
+            0,
+            0});
+            this.numericCallToneAlertDurationUpDown1.Name = "numericCallToneAlertDurationUpDown1";
+            this.numericCallToneAlertDurationUpDown1.Size = new System.Drawing.Size(120, 20);
+            this.numericCallToneAlertDurationUpDown1.TabIndex = 21;
+            // 
             // label9
             // 
             this.label9.Location = new System.Drawing.Point(7, 69);
@@ -1304,6 +1321,23 @@ namespace MD380_Manager
             this.groupBox3.TabIndex = 18;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Menu Items";
+            // 
+            // numericMenuHangTimeUpDown1
+            // 
+            this.numericMenuHangTimeUpDown1.Location = new System.Drawing.Point(135, 23);
+            this.numericMenuHangTimeUpDown1.Maximum = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            this.numericMenuHangTimeUpDown1.Name = "numericMenuHangTimeUpDown1";
+            this.numericMenuHangTimeUpDown1.Size = new System.Drawing.Size(49, 20);
+            this.numericMenuHangTimeUpDown1.TabIndex = 7;
+            this.numericMenuHangTimeUpDown1.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
             // groupBox7
             // 
@@ -1711,43 +1745,43 @@ namespace MD380_Manager
             this.radGridContacts.MasterTemplate.AllowDeleteRow = false;
             this.radGridContacts.MasterTemplate.AllowDragToGroup = false;
             this.radGridContacts.MasterTemplate.AutoGenerateColumns = false;
-            gridViewTextBoxColumn10.EnableExpressionEditor = false;
-            gridViewTextBoxColumn10.FieldName = "Name";
-            gridViewTextBoxColumn10.HeaderText = "Contact Name";
-            gridViewTextBoxColumn10.Name = "colContactName";
-            gridViewTextBoxColumn10.Width = 200;
-            gridViewComboBoxColumn4.DataSource = ((object)(resources.GetObject("gridViewComboBoxColumn4.DataSource")));
-            gridViewComboBoxColumn4.EnableExpressionEditor = false;
-            gridViewComboBoxColumn4.FieldName = "CallType";
-            gridViewComboBoxColumn4.HeaderText = "Call Type";
-            gridViewComboBoxColumn4.Name = "colType";
-            gridViewComboBoxColumn4.Width = 100;
-            gridViewTextBoxColumn11.EnableExpressionEditor = false;
-            gridViewTextBoxColumn11.FieldName = "CallID";
-            gridViewTextBoxColumn11.HeaderText = "Call ID";
-            gridViewTextBoxColumn11.Name = "colCallID";
-            gridViewTextBoxColumn11.Width = 100;
-            gridViewCheckBoxColumn4.EnableExpressionEditor = false;
-            gridViewCheckBoxColumn4.FieldName = "receiveTone";
-            gridViewCheckBoxColumn4.HeaderText = "Call Receive Tone";
-            gridViewCheckBoxColumn4.MinWidth = 20;
-            gridViewCheckBoxColumn4.Name = "colCT";
-            gridViewCheckBoxColumn4.Width = 100;
-            gridViewTextBoxColumn12.EnableExpressionEditor = false;
-            gridViewTextBoxColumn12.FieldName = "GUID";
-            gridViewTextBoxColumn12.HeaderText = "GUID";
-            gridViewTextBoxColumn12.IsVisible = false;
-            gridViewTextBoxColumn12.Name = "colGUID";
-            gridViewTextBoxColumn12.ReadOnly = true;
+            gridViewTextBoxColumn4.EnableExpressionEditor = false;
+            gridViewTextBoxColumn4.FieldName = "Name";
+            gridViewTextBoxColumn4.HeaderText = "Contact Name";
+            gridViewTextBoxColumn4.Name = "colContactName";
+            gridViewTextBoxColumn4.Width = 200;
+            gridViewComboBoxColumn2.DataSource = ((object)(resources.GetObject("gridViewComboBoxColumn2.DataSource")));
+            gridViewComboBoxColumn2.EnableExpressionEditor = false;
+            gridViewComboBoxColumn2.FieldName = "CallType";
+            gridViewComboBoxColumn2.HeaderText = "Call Type";
+            gridViewComboBoxColumn2.Name = "colType";
+            gridViewComboBoxColumn2.Width = 100;
+            gridViewTextBoxColumn5.EnableExpressionEditor = false;
+            gridViewTextBoxColumn5.FieldName = "CallID";
+            gridViewTextBoxColumn5.HeaderText = "Call ID";
+            gridViewTextBoxColumn5.Name = "colCallID";
+            gridViewTextBoxColumn5.Width = 100;
+            gridViewCheckBoxColumn2.EnableExpressionEditor = false;
+            gridViewCheckBoxColumn2.FieldName = "receiveTone";
+            gridViewCheckBoxColumn2.HeaderText = "Call Receive Tone";
+            gridViewCheckBoxColumn2.MinWidth = 20;
+            gridViewCheckBoxColumn2.Name = "colCT";
+            gridViewCheckBoxColumn2.Width = 100;
+            gridViewTextBoxColumn6.EnableExpressionEditor = false;
+            gridViewTextBoxColumn6.FieldName = "GUID";
+            gridViewTextBoxColumn6.HeaderText = "GUID";
+            gridViewTextBoxColumn6.IsVisible = false;
+            gridViewTextBoxColumn6.Name = "colGUID";
+            gridViewTextBoxColumn6.ReadOnly = true;
             this.radGridContacts.MasterTemplate.Columns.AddRange(new Telerik.WinControls.UI.GridViewDataColumn[] {
-            gridViewTextBoxColumn10,
-            gridViewComboBoxColumn4,
-            gridViewTextBoxColumn11,
-            gridViewCheckBoxColumn4,
-            gridViewTextBoxColumn12});
+            gridViewTextBoxColumn4,
+            gridViewComboBoxColumn2,
+            gridViewTextBoxColumn5,
+            gridViewCheckBoxColumn2,
+            gridViewTextBoxColumn6});
             this.radGridContacts.MasterTemplate.EnableGrouping = false;
             this.radGridContacts.MasterTemplate.EnableSorting = false;
-            this.radGridContacts.MasterTemplate.ViewDefinition = tableViewDefinition4;
+            this.radGridContacts.MasterTemplate.ViewDefinition = tableViewDefinition2;
             this.radGridContacts.Name = "radGridContacts";
             this.radGridContacts.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.radGridContacts.Size = new System.Drawing.Size(789, 555);
@@ -2066,7 +2100,7 @@ namespace MD380_Manager
             this.groupBox17.Controls.Add(this.label63);
             this.groupBox17.Controls.Add(this.cmboSLTXCH);
             this.groupBox17.Controls.Add(this.label64);
-            this.groupBox17.Controls.Add(this.cmboSCPriorityB);
+            this.groupBox17.Controls.Add(this.cmboSLPriorityB);
             this.groupBox17.Controls.Add(this.label61);
             this.groupBox17.Controls.Add(this.cmboSLPriorityA);
             this.groupBox17.Controls.Add(this.label62);
@@ -2084,6 +2118,130 @@ namespace MD380_Manager
             this.groupBox17.TabIndex = 11;
             this.groupBox17.TabStop = false;
             this.groupBox17.Text = "Scan List";
+            // 
+            // cmboSLSampleTime
+            // 
+            this.cmboSLSampleTime.FormattingEnabled = true;
+            this.cmboSLSampleTime.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.cmboSLSampleTime.Location = new System.Drawing.Point(142, 517);
+            this.cmboSLSampleTime.Name = "cmboSLSampleTime";
+            this.cmboSLSampleTime.Size = new System.Drawing.Size(140, 21);
+            this.cmboSLSampleTime.TabIndex = 44;
+            // 
+            // label65
+            // 
+            this.label65.Location = new System.Drawing.Point(6, 517);
+            this.label65.Name = "label65";
+            this.label65.Size = new System.Drawing.Size(130, 23);
+            this.label65.TabIndex = 43;
+            this.label65.Text = "Priority Sample Time(ms)";
+            this.label65.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // cmboSLSignalingHoldTime
+            // 
+            this.cmboSLSignalingHoldTime.FormattingEnabled = true;
+            this.cmboSLSignalingHoldTime.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.cmboSLSignalingHoldTime.Location = new System.Drawing.Point(142, 494);
+            this.cmboSLSignalingHoldTime.Name = "cmboSLSignalingHoldTime";
+            this.cmboSLSignalingHoldTime.Size = new System.Drawing.Size(140, 21);
+            this.cmboSLSignalingHoldTime.TabIndex = 42;
+            // 
+            // label63
+            // 
+            this.label63.Location = new System.Drawing.Point(6, 494);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(130, 23);
+            this.label63.TabIndex = 41;
+            this.label63.Text = "Signaling Hold Time(ms)";
+            this.label63.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // cmboSLTXCH
+            // 
+            this.cmboSLTXCH.FormattingEnabled = true;
+            this.cmboSLTXCH.Items.AddRange(new object[] {
+            "Silent",
+            "Open Squelch"});
+            this.cmboSLTXCH.Location = new System.Drawing.Point(142, 471);
+            this.cmboSLTXCH.Name = "cmboSLTXCH";
+            this.cmboSLTXCH.Size = new System.Drawing.Size(140, 21);
+            this.cmboSLTXCH.TabIndex = 40;
+            // 
+            // label64
+            // 
+            this.label64.Location = new System.Drawing.Point(6, 471);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(130, 23);
+            this.label64.TabIndex = 39;
+            this.label64.Text = "TX Designated CH";
+            this.label64.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // cmboSLPriorityB
+            // 
+            this.cmboSLPriorityB.FormattingEnabled = true;
+            this.cmboSLPriorityB.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.cmboSLPriorityB.Location = new System.Drawing.Point(142, 448);
+            this.cmboSLPriorityB.Name = "cmboSLPriorityB";
+            this.cmboSLPriorityB.Size = new System.Drawing.Size(140, 21);
+            this.cmboSLPriorityB.TabIndex = 38;
+            // 
+            // label61
+            // 
+            this.label61.Location = new System.Drawing.Point(6, 448);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(130, 23);
+            this.label61.TabIndex = 37;
+            this.label61.Text = "Priority Channel 2";
+            this.label61.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // cmboSLPriorityA
+            // 
+            this.cmboSLPriorityA.FormattingEnabled = true;
+            this.cmboSLPriorityA.Items.AddRange(new object[] {
+            "Silent",
+            "Open Squelch"});
+            this.cmboSLPriorityA.Location = new System.Drawing.Point(142, 425);
+            this.cmboSLPriorityA.Name = "cmboSLPriorityA";
+            this.cmboSLPriorityA.Size = new System.Drawing.Size(140, 21);
+            this.cmboSLPriorityA.TabIndex = 36;
+            // 
+            // label62
+            // 
+            this.label62.Location = new System.Drawing.Point(6, 425);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(130, 23);
+            this.label62.TabIndex = 35;
+            this.label62.Text = "Priority Channel 1";
+            this.label62.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnScnChanMvUp
             // 
@@ -3592,164 +3750,6 @@ namespace MD380_Manager
             this.lstChannels.TabIndex = 11;
             this.lstChannels.SelectedIndexChanged += new System.EventHandler(this.lstChannels_SelectedIndexChanged);
             // 
-            // numericCallToneAlertDurationUpDown1
-            // 
-            this.numericCallToneAlertDurationUpDown1.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericCallToneAlertDurationUpDown1.Location = new System.Drawing.Point(208, 69);
-            this.numericCallToneAlertDurationUpDown1.Maximum = new decimal(new int[] {
-            1200,
-            0,
-            0,
-            0});
-            this.numericCallToneAlertDurationUpDown1.Name = "numericCallToneAlertDurationUpDown1";
-            this.numericCallToneAlertDurationUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericCallToneAlertDurationUpDown1.TabIndex = 21;
-            // 
-            // numericMenuHangTimeUpDown1
-            // 
-            this.numericMenuHangTimeUpDown1.Location = new System.Drawing.Point(135, 23);
-            this.numericMenuHangTimeUpDown1.Maximum = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-            this.numericMenuHangTimeUpDown1.Name = "numericMenuHangTimeUpDown1";
-            this.numericMenuHangTimeUpDown1.Size = new System.Drawing.Size(49, 20);
-            this.numericMenuHangTimeUpDown1.TabIndex = 7;
-            this.numericMenuHangTimeUpDown1.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // cmboSCPriorityB
-            // 
-            this.cmboSCPriorityB.FormattingEnabled = true;
-            this.cmboSCPriorityB.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cmboSCPriorityB.Location = new System.Drawing.Point(142, 448);
-            this.cmboSCPriorityB.Name = "cmboSCPriorityB";
-            this.cmboSCPriorityB.Size = new System.Drawing.Size(140, 21);
-            this.cmboSCPriorityB.TabIndex = 38;
-            // 
-            // label61
-            // 
-            this.label61.Location = new System.Drawing.Point(6, 448);
-            this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(130, 23);
-            this.label61.TabIndex = 37;
-            this.label61.Text = "Priority Channel 2";
-            this.label61.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // cmboSLPriorityA
-            // 
-            this.cmboSLPriorityA.FormattingEnabled = true;
-            this.cmboSLPriorityA.Items.AddRange(new object[] {
-            "Silent",
-            "Open Squelch"});
-            this.cmboSLPriorityA.Location = new System.Drawing.Point(142, 425);
-            this.cmboSLPriorityA.Name = "cmboSLPriorityA";
-            this.cmboSLPriorityA.Size = new System.Drawing.Size(140, 21);
-            this.cmboSLPriorityA.TabIndex = 36;
-            // 
-            // label62
-            // 
-            this.label62.Location = new System.Drawing.Point(6, 425);
-            this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(130, 23);
-            this.label62.TabIndex = 35;
-            this.label62.Text = "Priority Channel 1";
-            this.label62.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // cmboSLSignalingHoldTime
-            // 
-            this.cmboSLSignalingHoldTime.FormattingEnabled = true;
-            this.cmboSLSignalingHoldTime.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cmboSLSignalingHoldTime.Location = new System.Drawing.Point(142, 494);
-            this.cmboSLSignalingHoldTime.Name = "cmboSLSignalingHoldTime";
-            this.cmboSLSignalingHoldTime.Size = new System.Drawing.Size(140, 21);
-            this.cmboSLSignalingHoldTime.TabIndex = 42;
-            // 
-            // label63
-            // 
-            this.label63.Location = new System.Drawing.Point(6, 494);
-            this.label63.Name = "label63";
-            this.label63.Size = new System.Drawing.Size(130, 23);
-            this.label63.TabIndex = 41;
-            this.label63.Text = "Signaling Hold Time(ms)";
-            this.label63.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // cmboSLTXCH
-            // 
-            this.cmboSLTXCH.FormattingEnabled = true;
-            this.cmboSLTXCH.Items.AddRange(new object[] {
-            "Silent",
-            "Open Squelch"});
-            this.cmboSLTXCH.Location = new System.Drawing.Point(142, 471);
-            this.cmboSLTXCH.Name = "cmboSLTXCH";
-            this.cmboSLTXCH.Size = new System.Drawing.Size(140, 21);
-            this.cmboSLTXCH.TabIndex = 40;
-            // 
-            // label64
-            // 
-            this.label64.Location = new System.Drawing.Point(6, 471);
-            this.label64.Name = "label64";
-            this.label64.Size = new System.Drawing.Size(130, 23);
-            this.label64.TabIndex = 39;
-            this.label64.Text = "TX Designated CH";
-            this.label64.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // cmboSLSampleTime
-            // 
-            this.cmboSLSampleTime.FormattingEnabled = true;
-            this.cmboSLSampleTime.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cmboSLSampleTime.Location = new System.Drawing.Point(142, 517);
-            this.cmboSLSampleTime.Name = "cmboSLSampleTime";
-            this.cmboSLSampleTime.Size = new System.Drawing.Size(140, 21);
-            this.cmboSLSampleTime.TabIndex = 44;
-            // 
-            // label65
-            // 
-            this.label65.Location = new System.Drawing.Point(6, 517);
-            this.label65.Name = "label65";
-            this.label65.Size = new System.Drawing.Size(130, 23);
-            this.label65.TabIndex = 43;
-            this.label65.Text = "Priority Sample Time(ms)";
-            this.label65.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3785,10 +3785,12 @@ namespace MD380_Manager
             ((System.ComponentModel.ISupportInitialize)(this.numAnlgHngTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numGnDigHngTime)).EndInit();
             this.groupBox9.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericCallToneAlertDurationUpDown1)).EndInit();
             this.groupBox8.ResumeLayout(false);
             this.tabPage7.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMenuHangTimeUpDown1)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
@@ -3810,8 +3812,6 @@ namespace MD380_Manager
             this.groupBox19.ResumeLayout(false);
             this.groupBox18.ResumeLayout(false);
             this.groupBox18.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericCallToneAlertDurationUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMenuHangTimeUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -4061,7 +4061,7 @@ namespace MD380_Manager
         private System.Windows.Forms.Label label63;
         private System.Windows.Forms.ComboBox cmboSLTXCH;
         private System.Windows.Forms.Label label64;
-        private System.Windows.Forms.ComboBox cmboSCPriorityB;
+        private System.Windows.Forms.ComboBox cmboSLPriorityB;
         private System.Windows.Forms.Label label61;
         private System.Windows.Forms.ComboBox cmboSLPriorityA;
         private System.Windows.Forms.Label label62;

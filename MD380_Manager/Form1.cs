@@ -54,12 +54,15 @@ namespace MD380_Manager
         }
         private void refreshScreens()
         {
+            initScanLists();
+
             loadBasicInfo();
             loadGeneralSettings();
             loadMenuItems();
             loadContacts();
             loadGroups(-1);
             loadZones(-1);
+            loadScanLists(-1);
         }
         #region Basic Info
         private void loadBasicInfo()
@@ -495,7 +498,6 @@ namespace MD380_Manager
         #endregion
 
         #region Zones
-
         private void loadZones(int idx)
         {
             lstZones.DataSource = null;
@@ -599,10 +601,88 @@ namespace MD380_Manager
         #endregion
 
         #region Scan Lists
-
-        private void loadScanLists()
+        private void initScanLists()
         {
+            List<KeyValuePair<string, string>> scnChan = new List<KeyValuePair<string, string>>();
+            scnChan.Add(new KeyValuePair<string,string>("Selected","Selected"));
+            foreach (Channel ch in MD380Data.Channels)
+                if (ch.ChannelName != "" && ch.ChannelName != "BLANK")
+                    scnChan.Add(new KeyValuePair<string,string>(ch.GUID.ToString(),ch.ChannelName));
 
+            List<KeyValuePair<string, string>> txChan = new List<KeyValuePair<string, string>>(scnChan);
+            scnChan.Add(new KeyValuePair<string, string>("None", "None"));
+            txChan.Add(new KeyValuePair<string, string>("Last Active Channel", "Last Active Channel"));
+
+            cmboSLPriorityA.DisplayMember = "Value";
+            cmboSLPriorityA.ValueMember = "Key";
+            cmboSLPriorityA.DataSource = scnChan;
+            cmboSLPriorityA.SelectedValue = "None";
+            
+            cmboSLPriorityB.DisplayMember = "Value";
+            cmboSLPriorityB.ValueMember = "Key";
+            cmboSLPriorityB.DataSource = scnChan;
+            cmboSLPriorityB.SelectedValue = "None";
+            
+            cmboSLTXCH.DisplayMember = "Value";
+            cmboSLTXCH.ValueMember = "Key";
+            cmboSLTXCH.DataSource = txChan;
+            cmboSLTXCH.SelectedValue = "Last Active Channel";
+
+            List<String> sht = new List<string>();
+            for (int i = 50; i <= 6375; i += 25)
+                sht.Add(i.ToString());
+
+            cmboSLSignalingHoldTime.DataSource = sht;
+
+            List<string> sst = new List<string>();
+            for (int i = 750; i <= 7750; i += 250)
+                sst.Add(i.ToString());
+
+            cmboSLSampleTime.DataSource = sst;
+        }
+        private void loadScanLists(int idx)
+        {
+            lstScanLists.DataSource = null;
+            lstScanLists.DisplayMember = "ScanListName";
+            lstScanLists.ValueMember = "GUID";
+            lstScanLists.DataSource = MD380Data.ScanLists;
+
+            if (idx != -1)
+                lstScanLists.SelectedIndex = idx;
+        }
+
+        private void refreshScanLists(int adx, int udx)
+        {
+            if (lstScanLists.SelectedIndex > -1)
+            {
+                List<Guid> assignedGuids = ((ScanList)lstScanLists.Items[lstScanLists.SelectedIndex]).ChannelMembers;
+
+                List<Channel> assignedChannels = new List<Channel>();
+                foreach (Guid cguid in assignedGuids)
+                    foreach (Channel ch in MD380Data.Channels)
+                        if (ch.GUID == cguid)
+                            assignedChannels.Add(ch);
+
+                List<Channel> unassignedChannels = MD380Data.Channels.Where(a => a.ChannelName != "BLANK").Except(assignedChannels).ToList();
+
+                lstScnChanAssn.DisplayMember = "ChannelName";
+                lstScnChanAssn.ValueMember = "GUID";
+                lstScnChanAssn.DataSource = assignedChannels;
+                lstScnChanAvail.DisplayMember = "ChannelName";
+                lstScnChanAvail.ValueMember = "GUID";
+                lstScnChanAvail.DataSource = unassignedChannels;
+                txtScnName.Text = ((ScanList)lstScanLists.SelectedItem).ScanListName;
+                cmboSLPriorityA.SelectedValue = ((ScanList)lstScanLists.SelectedItem).PriorityChannelA;
+                cmboSLPriorityB.SelectedValue = ((ScanList)lstScanLists.SelectedItem).PriorityChannelB;
+                cmboSLTXCH.SelectedValue = ((ScanList)lstScanLists.SelectedItem).TxDesignatedChannel;
+                cmboSLSampleTime.SelectedItem = ((ScanList)lstScanLists.SelectedItem).PrioritySampleTime.ToString();
+                cmboSLSignalingHoldTime.SelectedItem = ((ScanList)lstScanLists.SelectedItem).SignalingHoldTime.ToString();
+
+                if (adx > -1)
+                    lstScnChanAssn.SelectedIndex = (adx > (lstScnChanAssn.Items.Count - 1) ? lstScnChanAssn.Items.Count - 1 : adx);
+                if (udx > -1)
+                    lstScnChanAvail.SelectedIndex = (udx > (lstScnChanAvail.Items.Count - 1) ? lstScnChanAvail.Items.Count - 1 : udx);
+            }
         }
 
         private void btnScnMvUp_Click(object sender, EventArgs e)
@@ -637,7 +717,7 @@ namespace MD380_Manager
 
         private void lstScanLists_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            refreshScanLists(-1, -1);
         }
         #endregion
 
