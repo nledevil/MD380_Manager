@@ -366,6 +366,7 @@ namespace MD380_Manager
         #region Group Lists
         private void loadGroups(int idx)
         {
+            lstGroupList.DataSource = null;
             lstGroupList.DisplayMember = "GroupListName";
             lstGroupList.ValueMember = "GUID";
             lstGroupList.DataSource = MD380Data.Groups;
@@ -407,38 +408,27 @@ namespace MD380_Manager
         }
         private void refreshGroups(int adx, int udx)
         {
-            List<Guid> assignedGuids = ((GroupList)lstGroupList.Items[lstGroupList.SelectedIndex]).ContactMembers;
-
-            List<Contact> assignedContacts = new List<Contact>();
-            foreach (Guid cguid in assignedGuids)
-                foreach (Contact ct in MD380Data.Contacts)
-                    if (ct.GUID == cguid)
-                        assignedContacts.Add(ct);
-
-            List<Contact> unassignedContacts = MD380Data.Contacts.Where(a=>a.Name != "").Except(assignedContacts).ToList();
-
-            lstGrpAssn.DisplayMember = "Name";
-            lstGrpAssn.ValueMember = "GUID";
-            lstGrpAssn.DataSource = assignedContacts;
-            lstGrpAvail.DisplayMember = "Name";
-            lstGrpAvail.ValueMember = "GUID";
-            lstGrpAvail.DataSource = unassignedContacts;
-            txtGroupListName.Text = ((GroupList)lstGroupList.SelectedItem).GroupListName;
-            if (adx > -1)
+            if (lstGroupList.SelectedIndex > -1)
             {
-                if (adx > (lstGrpAssn.Items.Count - 1))
-                {
-                    adx = lstGrpAssn.Items.Count - 1;
-                }
-                lstGrpAssn.SelectedIndex = adx;
-            }
-            if (udx > -1)
-            {
-                if (udx > (lstGrpAvail.Items.Count - 1))
-                {
-                    udx = lstGrpAvail.Items.Count - 1;
-                }
-                lstGrpAvail.SelectedIndex = udx;
+                List<Guid> assignedGuids = ((GroupList)lstGroupList.Items[lstGroupList.SelectedIndex]).ContactMembers;
+
+                List<Contact> assignedContacts = new List<Contact>();
+                foreach (Guid cguid in assignedGuids)
+                    foreach (Contact ct in MD380Data.Contacts)
+                        if (ct.GUID == cguid)
+                            assignedContacts.Add(ct);
+
+                List<Contact> unassignedContacts = MD380Data.Contacts.Where(a => a.Name != "").Except(assignedContacts).ToList();
+
+                lstGrpAssn.DisplayMember = "Name";
+                lstGrpAssn.ValueMember = "GUID";
+                lstGrpAssn.DataSource = assignedContacts;
+                lstGrpAvail.DisplayMember = "Name";
+                lstGrpAvail.ValueMember = "GUID";
+                lstGrpAvail.DataSource = unassignedContacts;
+                txtGroupListName.Text = ((GroupList)lstGroupList.SelectedItem).GroupListName;
+                lstGrpAssn.SelectedIndex = (adx > (lstGrpAssn.Items.Count - 1) ? lstGrpAssn.Items.Count - 1 : lstGrpAssn.SelectedIndex);
+                lstGrpAvail.SelectedIndex = (udx > (lstGrpAvail.Items.Count - 1) ? lstGrpAvail.Items.Count - 1 : lstGrpAvail.SelectedIndex);
             }
         }
         private void btnGrpLstMoveUp_Click(object sender, EventArgs e)
@@ -463,16 +453,19 @@ namespace MD380_Manager
         }
         private void btnGrpLstAdd_Click(object sender, EventArgs e)
         {
-            Guid cntGuid = MD380Data.Contacts.Where(a => a.Name == lstGrpAvail.SelectedItem.ToString()).FirstOrDefault().GUID;
-            MD380Data.Groups.Where(b => b.GroupListName == lstGroupList.SelectedItem.ToString()).FirstOrDefault().ContactMembers.Add(cntGuid);
-            int udx = lstGrpAvail.SelectedIndex;
-            int adx = lstGrpAssn.SelectedIndex;
-            refreshGroups(adx, udx);
+            if (lstGrpAvail.Items.Count > 0)
+            {
+                Guid cntGuid = (Guid)lstGrpAvail.SelectedValue;
+                MD380Data.Groups.Where(b => b.GUID == (Guid)lstGroupList.SelectedValue).FirstOrDefault().ContactMembers.Add(cntGuid);
+                int udx = lstGrpAvail.SelectedIndex;
+                int adx = lstGrpAssn.SelectedIndex;
+                refreshGroups(adx, udx);
+            }
         }
         private void btnGrpLstRemove_Click(object sender, EventArgs e)
         {
-            Guid cntGuid = MD380Data.Contacts.Where(a => a.Name == lstGrpAssn.SelectedItem.ToString()).FirstOrDefault().GUID;
-            MD380Data.Groups.Where(b => b.GroupListName == lstGroupList.SelectedItem.ToString()).FirstOrDefault().ContactMembers.Remove(cntGuid);
+            Guid cntGuid = (Guid)lstGrpAssn.SelectedValue;
+            MD380Data.Groups.Where(b => b.GUID == (Guid)lstGroupList.SelectedValue).FirstOrDefault().ContactMembers.Remove(cntGuid);
             int udx = lstGrpAvail.SelectedIndex;
             int adx = lstGrpAssn.SelectedIndex;
             refreshGroups(adx, udx);
@@ -481,9 +474,9 @@ namespace MD380_Manager
         {
             if (lstGrpAssn.SelectedIndex > 0)
             {
-                Guid cntGuid = MD380Data.Contacts.Where(a => a.Name == lstGrpAssn.SelectedItem.ToString()).FirstOrDefault().GUID;
-                MD380Data.Groups.Where(b => b.GroupListName == lstGroupList.SelectedItem.ToString()).FirstOrDefault().ContactMembers.RemoveAt(lstGrpAssn.SelectedIndex);
-                MD380Data.Groups.Where(b => b.GroupListName == lstGroupList.SelectedItem.ToString()).FirstOrDefault().ContactMembers.Insert((lstGrpAssn.SelectedIndex - 1), cntGuid);
+                Guid cntGuid = (Guid)lstGrpAssn.SelectedValue;
+                MD380Data.Groups.Where(b => b.GUID == (Guid)lstGroupList.SelectedValue).FirstOrDefault().ContactMembers.RemoveAt(lstGrpAssn.SelectedIndex);
+                MD380Data.Groups.Where(b => b.GUID == (Guid)lstGroupList.SelectedValue).FirstOrDefault().ContactMembers.Insert((lstGrpAssn.SelectedIndex - 1), cntGuid);
                 refreshGroups(lstGrpAssn.SelectedIndex - 1, -1);
             }
         }
@@ -491,9 +484,9 @@ namespace MD380_Manager
         {
             if (lstGrpAssn.SelectedIndex < (lstGrpAssn.Items.Count - 1))
             {
-                Guid cntGuid = MD380Data.Contacts.Where(a => a.Name == lstGrpAssn.SelectedItem.ToString()).FirstOrDefault().GUID;
-                MD380Data.Groups.Where(b => b.GroupListName == lstGroupList.SelectedItem.ToString()).FirstOrDefault().ContactMembers.RemoveAt(lstGrpAssn.SelectedIndex);
-                MD380Data.Groups.Where(b => b.GroupListName == lstGroupList.SelectedItem.ToString()).FirstOrDefault().ContactMembers.Insert((lstGrpAssn.SelectedIndex + 1), cntGuid);
+                Guid cntGuid = (Guid)lstGrpAssn.SelectedValue;
+                MD380Data.Groups.Where(b => b.GUID == (Guid)lstGroupList.SelectedValue).FirstOrDefault().ContactMembers.RemoveAt(lstGrpAssn.SelectedIndex);
+                MD380Data.Groups.Where(b => b.GUID == (Guid)lstGroupList.SelectedValue).FirstOrDefault().ContactMembers.Insert((lstGrpAssn.SelectedIndex + 1), cntGuid);
                 refreshGroups(lstGrpAssn.SelectedIndex + 1, -1);
             }
         }
@@ -503,97 +496,97 @@ namespace MD380_Manager
 
         private void loadZones(int idx)
         {
-            List<string> znListNames = new List<string>();
-            foreach (ZoneList zn in MD380Data.Zones.Where(a => a.ZoneName != ""))
-            {
-                znListNames.Add(zn.ZoneName);
-            }
-            lstZones.DataSource = znListNames;
-            
+            lstZones.DataSource = null;
+            lstZones.DisplayMember = "ZoneName";
+            lstZones.ValueMember = "GUID";
+            lstZones.DataSource = MD380Data.Zones;
+
             if (idx != -1)
                 lstZones.SelectedIndex = idx;
         }
         private void refreshZones(int adx, int udx)
         {
-            List<Guid> assignedGuids = MD380Data.Zones.Where(a => a.ZoneName == lstZones.SelectedItem.ToString()).FirstOrDefault().ChannelMembers;
-            List<Channel> assignedChannels = new List<Channel>();
-            foreach (Guid cguid in assignedGuids)
-                foreach (Channel ch in MD380Data.Channels)
-                    if (ch.GUID == cguid)
-                        assignedChannels.Add(ch);
-
-            List<Channel> unassignedChannels = MD380Data.Channels.Where(a=>a.ChannelName != "").Except(assignedChannels).ToList();
-
-            List<string> aChannels = new List<string>();
-            List<string> uChannels = new List<string>();
-            foreach (Channel ch in assignedChannels)
-                aChannels.Add(ch.ChannelName);
-
-            foreach (Channel ch in unassignedChannels)
-                if (ch.ChannelMode != "BLANK")
-                    uChannels.Add(ch.ChannelName);
-
-            lstZnChanAssigned.DataSource = aChannels;
-            lstZnChanAvail.DataSource = uChannels;
-            txtZnName.Text = lstZones.SelectedItem.ToString();
-            if (adx > -1)
+            if (lstZones.SelectedIndex > -1)
             {
-                if (adx > (lstZnChanAssigned.Items.Count - 1))
-                {
-                    adx = lstZnChanAssigned.Items.Count - 1;
-                }
-                lstZnChanAssigned.SelectedIndex = adx;
-            }
-            if (udx > -1)
-            {
-                if (udx > (lstZnChanAvail.Items.Count - 1))
-                {
-                    udx = lstZnChanAvail.Items.Count - 1;
-                }
-                lstZnChanAvail.SelectedIndex = udx;
+                List<Guid> assignedGuids = ((ZoneList)lstZones.Items[lstZones.SelectedIndex]).ChannelMembers;
+                List<Channel> assignedChannels = new List<Channel>();
+                foreach (Guid cguid in assignedGuids)
+                    foreach (Channel ch in MD380Data.Channels)
+                        if (ch.GUID == cguid)
+                            assignedChannels.Add(ch);
+
+                List<Channel> unassignedChannels = MD380Data.Channels.Where(a => a.ChannelName != "BLANK").Except(assignedChannels).ToList();
+
+                lstZnChanAssigned.DisplayMember = "ChannelName";
+                lstZnChanAssigned.ValueMember = "GUID";
+                lstZnChanAssigned.DataSource = assignedChannels;
+                lstZnChanAvail.DisplayMember = "ChannelName";
+                lstZnChanAvail.ValueMember = "GUID";
+                lstZnChanAvail.DataSource = unassignedChannels;
+                txtZnName.Text = ((ZoneList)lstZones.SelectedItem).ZoneName;
+
+                lstZnChanAssigned.SelectedIndex = (adx > (lstZnChanAssigned.Items.Count - 1) ? lstZnChanAssigned.Items.Count - 1 : lstZnChanAssigned.SelectedIndex);
+                lstZnChanAvail.SelectedIndex = (udx > (lstZnChanAvail.Items.Count - 1) ? lstZnChanAvail.Items.Count - 1 : lstZnChanAvail.SelectedIndex);
             }
         }
-
         private void btnZnMvUp_Click(object sender, EventArgs e)
         {
             if (lstZones.SelectedIndex > 0)
             {
-                ZoneList zone = MD380Data.Zones.Where(a => a.ZoneName == lstZones.SelectedItem.ToString()).FirstOrDefault();
+                ZoneList zone = MD380Data.Zones.Where(a => a.GUID == (Guid)lstZones.SelectedValue).FirstOrDefault();
                 MD380Data.Zones.RemoveAt(lstZones.SelectedIndex);
                 MD380Data.Zones.Insert(lstZones.SelectedIndex - 1, zone);
                 loadZones(lstZones.SelectedIndex - 1);
             }
         }
-
         private void btnZnMvDwn_Click(object sender, EventArgs e)
         {
             if (lstZones.SelectedIndex < (lstZones.Items.Count - 1))
             {
-                ZoneList zone = MD380Data.Zones.Where(a => a.ZoneName == lstZones.SelectedItem.ToString()).FirstOrDefault();
+                ZoneList zone = MD380Data.Zones.Where(a => a.GUID == (Guid)lstZones.SelectedValue).FirstOrDefault();
                 MD380Data.Zones.RemoveAt(lstZones.SelectedIndex);
                 MD380Data.Zones.Insert(lstZones.SelectedIndex + 1, zone);
                 loadZones(lstZones.SelectedIndex + 1);
             }
         }
-
         private void btnZnAdd_Click(object sender, EventArgs e)
         {
-
+            if (lstZnChanAvail.Items.Count > 0)
+            {
+                Guid chGuid = (Guid)lstZnChanAvail.SelectedValue;
+                MD380Data.Zones.Where(z => z.GUID == (Guid)lstZones.SelectedValue).FirstOrDefault().ChannelMembers.Add(chGuid);
+                int udx = lstZnChanAvail.SelectedIndex;
+                int adx = lstZnChanAssigned.SelectedIndex;
+                refreshZones(adx, udx);
+            }
         }
-
         private void btnZnRemove_Click(object sender, EventArgs e)
         {
-
+            Guid chGuid = (Guid)lstZnChanAvail.SelectedValue;
+            MD380Data.Zones.Where(z => z.GUID == (Guid)lstZones.SelectedValue).FirstOrDefault().ChannelMembers.Remove(chGuid);
+            int udx = lstZnChanAvail.SelectedIndex;
+            int adx = lstZnChanAssigned.SelectedIndex;
+            refreshZones(adx, udx);
         }
-
         private void btnZnAssnMvUp_Click(object sender, EventArgs e)
         {
-
+            if (lstZnChanAssigned.SelectedIndex > 0)
+            {
+                Guid chGuid = (Guid)lstZnChanAssigned.SelectedValue;
+                MD380Data.Zones.Where(b => b.GUID == (Guid)lstZones.SelectedValue).FirstOrDefault().ChannelMembers.RemoveAt(lstZnChanAssigned.SelectedIndex);
+                MD380Data.Zones.Where(b => b.GUID == (Guid)lstZones.SelectedValue).FirstOrDefault().ChannelMembers.Insert((lstZnChanAssigned.SelectedIndex - 1), chGuid);
+                refreshZones(lstZnChanAssigned.SelectedIndex - 1, -1);
+            }
         }
-
         private void btnZnAssnMvDwn_Click(object sender, EventArgs e)
         {
-
+            if (lstZnChanAssigned.SelectedIndex < (lstZnChanAssigned.Items.Count-1))
+            {
+                Guid chGuid = (Guid)lstZnChanAssigned.SelectedValue;
+                MD380Data.Zones.Where(b => b.GUID == (Guid)lstZones.SelectedValue).FirstOrDefault().ChannelMembers.RemoveAt(lstZnChanAssigned.SelectedIndex);
+                MD380Data.Zones.Where(b => b.GUID == (Guid)lstZones.SelectedValue).FirstOrDefault().ChannelMembers.Insert((lstZnChanAssigned.SelectedIndex + 1), chGuid);
+                refreshZones(lstZnChanAssigned.SelectedIndex + 1, -1);
+            }
         }
         private void lstZones_SelectedIndexChanged(object sender, EventArgs e)
         {
