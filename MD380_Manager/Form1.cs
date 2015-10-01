@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Telerik.WinControls;
 using Telerik.WinControls.UI;
 
 namespace MD380_Manager
 {
     public partial class Form1 : Form
     {
+        private byte[] _F;
         private RadContextMenu cntContextMenu;
         public Form1()
         {
@@ -50,7 +51,12 @@ namespace MD380_Manager
             mvDwn.Click += new EventHandler(cntMoveDown);
             cntContextMenu.Items.Add(mvDwn);
 
-            initChannels();
+            // Channels Tab
+            cmboCHTOTRekeyDelay.Items.Clear();
+            for (int i = 0; i < 256; i++)
+                cmboCHTOTRekeyDelay.Items.Add(i.ToString());
+
+                initChannels();
         }
         private void refreshScreens()
         {
@@ -63,6 +69,7 @@ namespace MD380_Manager
             loadGroups(-1);
             loadZones(-1);
             loadScanLists(-1);
+            loadChannels(-1);
         }
         #region Basic Info
         private void loadBasicInfo()
@@ -469,11 +476,14 @@ namespace MD380_Manager
         }
         private void btnGrpLstRemove_Click(object sender, EventArgs e)
         {
-            Guid cntGuid = (Guid)lstGrpAssn.SelectedValue;
-            MD380Data.Groups.Where(b => b.GUID == (Guid)lstGroupList.SelectedValue).FirstOrDefault().ContactMembers.Remove(cntGuid);
-            int udx = lstGrpAvail.SelectedIndex;
-            int adx = lstGrpAssn.SelectedIndex;
-            refreshGroups(adx, udx);
+            if (lstGrpAssn.Items.Count > 0)
+            {
+                Guid cntGuid = (Guid)lstGrpAssn.SelectedValue;
+                MD380Data.Groups.Where(b => b.GUID == (Guid)lstGroupList.SelectedValue).FirstOrDefault().ContactMembers.Remove(cntGuid);
+                int udx = lstGrpAvail.SelectedIndex;
+                int adx = lstGrpAssn.SelectedIndex;
+                refreshGroups(adx, udx);
+            }
         }
         private void btnGrpAssnMoveUp_Click(object sender, EventArgs e)
         {
@@ -568,11 +578,14 @@ namespace MD380_Manager
         }
         private void btnZnRemove_Click(object sender, EventArgs e)
         {
-            Guid chGuid = (Guid)lstZnChanAvail.SelectedValue;
-            MD380Data.Zones.Where(z => z.GUID == (Guid)lstZones.SelectedValue).FirstOrDefault().ChannelMembers.Remove(chGuid);
-            int udx = lstZnChanAvail.SelectedIndex;
-            int adx = lstZnChanAssigned.SelectedIndex;
-            refreshZones(adx, udx);
+            if (lstZnChanAssigned.Items.Count > 0)
+            {
+                Guid chGuid = (Guid)lstZnChanAvail.SelectedValue;
+                MD380Data.Zones.Where(z => z.GUID == (Guid)lstZones.SelectedValue).FirstOrDefault().ChannelMembers.Remove(chGuid);
+                int udx = lstZnChanAvail.SelectedIndex;
+                int adx = lstZnChanAssigned.SelectedIndex;
+                refreshZones(adx, udx);
+            }
         }
         private void btnZnAssnMvUp_Click(object sender, EventArgs e)
         {
@@ -603,30 +616,9 @@ namespace MD380_Manager
         #region Scan Lists
         private void initScanLists()
         {
-            List<KeyValuePair<string, string>> scnChan = new List<KeyValuePair<string, string>>();
-            scnChan.Add(new KeyValuePair<string,string>("Selected","Selected"));
-            foreach (Channel ch in MD380Data.Channels)
-                if (ch.ChannelName != "" && ch.ChannelName != "BLANK")
-                    scnChan.Add(new KeyValuePair<string,string>(ch.GUID.ToString(),ch.ChannelName));
-
-            List<KeyValuePair<string, string>> txChan = new List<KeyValuePair<string, string>>(scnChan);
-            scnChan.Add(new KeyValuePair<string, string>("None", "None"));
-            txChan.Add(new KeyValuePair<string, string>("Last Active Channel", "Last Active Channel"));
-
-            cmboSLPriorityA.DisplayMember = "Value";
-            cmboSLPriorityA.ValueMember = "Key";
-            cmboSLPriorityA.DataSource = scnChan;
-            cmboSLPriorityA.SelectedValue = "None";
-            
-            cmboSLPriorityB.DisplayMember = "Value";
-            cmboSLPriorityB.ValueMember = "Key";
-            cmboSLPriorityB.DataSource = scnChan;
-            cmboSLPriorityB.SelectedValue = "None";
-            
-            cmboSLTXCH.DisplayMember = "Value";
-            cmboSLTXCH.ValueMember = "Key";
-            cmboSLTXCH.DataSource = txChan;
-            cmboSLTXCH.SelectedValue = "Last Active Channel";
+            _F = new byte[16];
+            for (int i = 0; i < 16; i++)
+                _F[i] = byte.Parse("FF", NumberStyles.HexNumber);
 
             List<String> sht = new List<string>();
             for (int i = 50; i <= 6375; i += 25)
@@ -640,17 +632,73 @@ namespace MD380_Manager
 
             cmboSLSampleTime.DataSource = sst;
         }
+        private void initCmboSLPriorityA(List<Channel> list)
+        {
+            List<Channel> newList = new List<Channel>(list);
+            cmboSLPriorityA.DataSource = null;
+            Channel selected = new Channel();
+            selected.GUID = Guid.Empty;
+            selected.ChannelName = "Selected";
+            newList.Insert(0, selected);
+
+            Channel none = new Channel();
+            none.GUID = new Guid(_F);
+            none.ChannelName = "None";
+            newList.Add(none);
+
+            cmboSLPriorityA.DisplayMember = "ChannelName";
+            cmboSLPriorityA.ValueMember = "GUID";
+            cmboSLPriorityA.DataSource = newList;
+            cmboSLPriorityA.SelectedValue = (Guid)((ScanList)lstScanLists.SelectedItem).PriorityChannelA;
+        }
+        private void initCmboSLPriorityB(List<Channel> list)
+        {
+            List<Channel> newList = new List<Channel>(list);
+            cmboSLPriorityB.DataSource = null;
+            Channel selected = new Channel();
+            selected.GUID = Guid.Empty;
+            selected.ChannelName = "Selected";
+            newList.Insert(0, selected);
+
+            Channel none = new Channel();
+            none.GUID = new Guid(_F);
+            none.ChannelName = "None";
+            newList.Add(none);
+
+            cmboSLPriorityB.DisplayMember = "ChannelName";
+            cmboSLPriorityB.ValueMember = "GUID";
+            cmboSLPriorityB.DataSource = newList;
+            cmboSLPriorityB.SelectedValue = (Guid)((ScanList)lstScanLists.SelectedItem).PriorityChannelB;
+        }
+        private void initCmboSLTXCH(List<Channel> list)
+        {
+            List<Channel> newList = new List<Channel>(list);
+            cmboSLTXCH.DataSource = null;
+            Channel selected = new Channel();
+            selected.GUID = Guid.Empty;
+            selected.ChannelName = "Selected";
+            newList.Insert(0, selected);
+
+            Channel none = new Channel();
+            none.GUID = new Guid(_F);
+            none.ChannelName = "Last Active";
+            newList.Add(none);
+
+            cmboSLTXCH.DisplayMember = "ChannelName";
+            cmboSLTXCH.ValueMember = "GUID";
+            cmboSLTXCH.DataSource = newList;
+            cmboSLTXCH.SelectedValue = (Guid)((ScanList)lstScanLists.SelectedItem).TxDesignatedChannel;
+        }
         private void loadScanLists(int idx)
         {
             lstScanLists.DataSource = null;
             lstScanLists.DisplayMember = "ScanListName";
             lstScanLists.ValueMember = "GUID";
-            lstScanLists.DataSource = MD380Data.ScanLists;
+            lstScanLists.DataSource = MD380Data.ScanLists.Where(a => a.ScanListName != "").ToList();
 
             if (idx != -1)
                 lstScanLists.SelectedIndex = idx;
         }
-
         private void refreshScanLists(int adx, int udx)
         {
             if (lstScanLists.SelectedIndex > -1)
@@ -672,9 +720,12 @@ namespace MD380_Manager
                 lstScnChanAvail.ValueMember = "GUID";
                 lstScnChanAvail.DataSource = unassignedChannels;
                 txtScnName.Text = ((ScanList)lstScanLists.SelectedItem).ScanListName;
-                cmboSLPriorityA.SelectedValue = ((ScanList)lstScanLists.SelectedItem).PriorityChannelA;
-                cmboSLPriorityB.SelectedValue = ((ScanList)lstScanLists.SelectedItem).PriorityChannelB;
-                cmboSLTXCH.SelectedValue = ((ScanList)lstScanLists.SelectedItem).TxDesignatedChannel;
+
+                initCmboSLPriorityA(assignedChannels);
+                initCmboSLPriorityB(assignedChannels);
+                initCmboSLTXCH(assignedChannels);
+                
+                
                 cmboSLSampleTime.SelectedItem = ((ScanList)lstScanLists.SelectedItem).PrioritySampleTime.ToString();
                 cmboSLSignalingHoldTime.SelectedItem = ((ScanList)lstScanLists.SelectedItem).SignalingHoldTime.ToString();
 
@@ -684,37 +735,68 @@ namespace MD380_Manager
                     lstScnChanAvail.SelectedIndex = (udx > (lstScnChanAvail.Items.Count - 1) ? lstScnChanAvail.Items.Count - 1 : udx);
             }
         }
-
         private void btnScnMvUp_Click(object sender, EventArgs e)
         {
-
+            if (lstScanLists.SelectedIndex > 0)
+            {
+                ScanList slist = MD380Data.ScanLists.Where(a => a.GUID == (Guid)lstScanLists.SelectedValue).FirstOrDefault();
+                MD380Data.ScanLists.RemoveAt(lstScanLists.SelectedIndex);
+                MD380Data.ScanLists.Insert(lstScanLists.SelectedIndex - 1, slist);
+                loadScanLists(lstScanLists.SelectedIndex - 1);
+            }
         }
-
         private void btnScnMvDwn_Click(object sender, EventArgs e)
         {
-
+            if (lstScanLists.SelectedIndex < (lstScanLists.Items.Count - 1))
+            {
+                ScanList slist = MD380Data.ScanLists.Where(a => a.GUID == (Guid)lstScanLists.SelectedValue).FirstOrDefault();
+                MD380Data.ScanLists.RemoveAt(lstScanLists.SelectedIndex);
+                MD380Data.ScanLists.Insert(lstScanLists.SelectedIndex + 1, slist);
+                loadScanLists(lstScanLists.SelectedIndex + 1);
+            }
         }
-
         private void btnScnAdd_Click(object sender, EventArgs e)
         {
-
+            if (lstScnChanAvail.Items.Count > 0)
+            {
+                Guid chGuid = (Guid)lstScnChanAvail.SelectedValue;
+                MD380Data.ScanLists.Where(z => z.GUID == (Guid)lstScanLists.SelectedValue).FirstOrDefault().ChannelMembers.Add(chGuid);
+                int udx = lstScnChanAvail.SelectedIndex;
+                int adx = lstScnChanAssn.SelectedIndex;
+                refreshScanLists(adx, udx);
+            }
         }
-
         private void btnScnRemove_Click(object sender, EventArgs e)
         {
-
+            if (lstScnChanAssn.Items.Count > 0)
+            {
+                Guid chGuid = (Guid)lstScnChanAssn.SelectedValue;
+                MD380Data.ScanLists.Where(z => z.GUID == (Guid)lstScanLists.SelectedValue).FirstOrDefault().ChannelMembers.Remove(chGuid);
+                int udx = lstScnChanAvail.SelectedIndex;
+                int adx = lstScnChanAssn.SelectedIndex;
+                refreshScanLists(adx, udx);
+            }
         }
-
-        private void btnScnChanMvUp_Click(object sender, EventArgs e)
+        private void btnScnChanMvUp_Click_1(object sender, EventArgs e)
         {
-
+            if (lstScnChanAssn.SelectedIndex > 0)
+            {
+                Guid chGuid = (Guid)lstScnChanAssn.SelectedValue;
+                MD380Data.ScanLists.Where(b => b.GUID == (Guid)lstScanLists.SelectedValue).FirstOrDefault().ChannelMembers.RemoveAt(lstScnChanAssn.SelectedIndex);
+                MD380Data.ScanLists.Where(b => b.GUID == (Guid)lstScanLists.SelectedValue).FirstOrDefault().ChannelMembers.Insert((lstScnChanAssn.SelectedIndex - 1), chGuid);
+                refreshScanLists(lstScnChanAssn.SelectedIndex - 1, -1);
+            }
         }
-
-        private void btnScnChanMvDwn_Click(object sender, EventArgs e)
+        private void btnScnChanMvDwn_Click_1(object sender, EventArgs e)
         {
-
+            if (lstScnChanAssn.SelectedIndex < (lstScnChanAssn.Items.Count-1))
+            {
+                Guid chGuid = (Guid)lstScnChanAssn.SelectedValue;
+                MD380Data.ScanLists.Where(b => b.GUID == (Guid)lstScanLists.SelectedValue).FirstOrDefault().ChannelMembers.RemoveAt(lstScnChanAssn.SelectedIndex);
+                MD380Data.ScanLists.Where(b => b.GUID == (Guid)lstScanLists.SelectedValue).FirstOrDefault().ChannelMembers.Insert((lstScnChanAssn.SelectedIndex + 1), chGuid);
+                refreshScanLists(lstScnChanAssn.SelectedIndex + 1, -1);
+            }
         }
-
         private void lstScanLists_SelectedIndexChanged(object sender, EventArgs e)
         {
             refreshScanLists(-1, -1);
@@ -746,9 +828,156 @@ namespace MD380_Manager
             cmboCHRXSignaling.SelectedItem = "Off";
             cmboCHTXSignaling.SelectedItem = "Off";
         }
-        private void loadChannels()
+        private void loadChannels(int idx)
         {
+            lstChannels.DataSource = null;
+            lstChannels.DisplayMember = "ChannelName";
+            lstChannels.ValueMember = "GUID";
+            lstChannels.DataSource = MD380Data.Channels.Where(a => a.ChannelName != "BLANK").ToList();
 
+            if (idx != -1)
+                lstChannels.SelectedIndex = idx;
+        }
+        private void refreshChannels()
+        {
+            if (lstChannels.SelectedIndex > -1)
+            {
+                // Contact Name
+                cmboCHContactName.DataSource = null;
+                cmboCHContactName.DisplayMember = "Name";
+                cmboCHContactName.ValueMember = "GUID";
+                cmboCHContactName.DataSource = MD380Data.Contacts;
+
+                // Group List
+                cmboCHGroupList.DataSource = null;
+                cmboCHGroupList.DisplayMember = "GroupListName";
+                cmboCHGroupList.ValueMember = "GUID";
+                cmboCHGroupList.DataSource = MD380Data.Groups;
+
+                Channel chan = (Channel)lstChannels.Items[lstChannels.SelectedIndex];
+
+                //// GENERAL SETTINGS
+
+                // Channel Mode
+                cmboCHChannelMode.SelectedItem = chan.ChannelMode;
+
+                // Bandwidth
+                cmboCHBandwidth.SelectedItem = chan.Bandwidth;
+                
+                // Scan List
+
+                // Squelch
+                cmboCHSquelch.SelectedItem = chan.Squelch;
+
+                // RX Ref
+                cmboCHRXRefFreq.SelectedItem = chan.RXRef;
+
+                // TX Ref
+                cmboCHTXRefFreq.SelectedItem = chan.TXRef;
+
+                // TOT
+                cmboCHTOT.SelectedItem = (chan.TOT == 0 ? "Infinite" : chan.TOT.ToString());
+
+                // TOT Rekey
+                cmboCHTOTRekeyDelay.SelectedItem = chan.TOTDelay.ToString();
+
+                // Power
+                cmboCHPower.SelectedItem = chan.Power;
+
+                // Channel Name
+                txtCHChannelName.Text = chan.ChannelName;
+
+                // RX Freq
+                txtCHRXFreq.Text = chan.RXFreq;
+
+                // TX Freq
+                txtCHTXFreq.Text = chan.TXFreq;
+
+                // Admit Criteria
+                cmboCHAdmitCriteria.SelectedItem = chan.AdmitCriteria;
+
+                // Auto Scan Checkbox
+                chkCHAutoScan.Checked = chan.AutoScan;
+
+                // RX Only Checkbox
+                chkCHRXOnly.Checked = chan.RXOnly;
+                
+                // Lone Worker Checkbox
+                chkCHLoneWorker.Checked = chan.LoneWorker;
+
+                // VOX Checkbox
+                chkCHVOX.Checked = chan.VOX;
+
+                // Allow Talkaround Checkbox
+                chkCHAlwTalkaround.Checked = chan.AllowTalkaround;
+
+                //// ANALOG
+
+                // CTCSS Decode
+                cmboCHCTCSSDec.SelectedItem = chan.analog.CTCSSDecode;
+
+                // CTCSS Encode
+                cmboCHCTCSSEnc.SelectedItem = chan.analog.CTCSSEncode;
+
+                // QT Revers
+                cmboCHQTReverse.SelectedItem = chan.analog.QTReverse;
+
+                // RX Signaling
+                cmboCHRXSignaling.SelectedItem = chan.analog.RXSignaling;
+
+                // TX Signaling
+                cmboCHTXSignaling.SelectedItem = chan.analog.TXSignaling;
+
+                // Disable PTT ID Checkbox
+                chkCHDisablePTTID.Checked = chan.analog.DisplayPTTID;
+
+                // Reverse Burst Checkbox
+                chkCHReverseBurst.Checked = chan.analog.ReverseBurst;
+
+                // Decode 1-8 Checkboxes
+                chkCHDecode1.Checked = chan.analog.decodes.decode1;
+                chkCHDecode2.Checked = chan.analog.decodes.decode2;
+                chkCHDecode3.Checked = chan.analog.decodes.decode3;
+                chkCHDecode4.Checked = chan.analog.decodes.decode4;
+                chkCHDecode5.Checked = chan.analog.decodes.decode5;
+                chkCHDecode6.Checked = chan.analog.decodes.decode6;
+                chkCHDecode7.Checked = chan.analog.decodes.decode7;
+                chkCHDecode8.Checked = chan.analog.decodes.decode8;
+
+                //// DIGITAL
+
+                // Emergency System
+
+                // Contact Name
+                cmboCHContactName.SelectedValue = chan.digital.ContactGuid;
+
+                // Group List
+                cmboCHGroupList.SelectedValue = chan.digital.GroupListGuid;
+
+                // Color Code
+                cmboCHColorCode.SelectedItem = chan.digital.ColorCode.ToString();
+
+                // Repeater Slot
+                cmboCHTS.SelectedItem = chan.digital.RepeaterSlot.ToString();
+
+                // Privacy
+                cmboCHPrivacy.SelectedItem = chan.digital.Privacy;
+
+                // Privacy No
+                cmboCHPrivacyNo.SelectedItem = chan.digital.PrivacyNo.ToString();
+
+                // Private Call Conf Checkbox
+                chkCHPrivCallConf.Checked = chan.digital.PrivateCallConf;
+
+                // Emergency Ack Checkbox
+                chkCHEmgcyAlrmAck.Checked = chan.digital.EmergencyAlarmAck;
+
+                // Data Call Conf Checkbox
+                chkCHDataCallConf.Checked = chan.digital.DataCallConf;
+
+                // Compressed UDP Header Checkbox
+                chkCHCompUDP.Checked = chan.digital.CompressedUDPDataHeader;
+            }
         }
         private void btnCHMvUp_Click(object sender, EventArgs e)
         {
@@ -760,7 +989,7 @@ namespace MD380_Manager
         }
         private void lstChannels_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            refreshChannels();
         }
         private void cmboCHChannelMode_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -868,6 +1097,8 @@ namespace MD380_Manager
                 }
             }
         }
+
+        
 
         
     }

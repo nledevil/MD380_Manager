@@ -765,13 +765,13 @@ namespace MD380_Manager
                         #region Channel Byte 0
                         // Channel Mode (Analog/Digital)
                         string cMode = btoh(ch[0]).Substring(1, 1);
-                        channel.ChannelMode = (cMode == "9" || cMode == "1") ? "ANALOG" : (cMode == "2" ? "DIGITAL" : "BLANK");
+                        channel.ChannelMode = (cMode == "9" || cMode == "1") ? "Analog" : (cMode == "2" ? "Digital" : "BLANK");
                         channel.Bandwidth = (cMode == "1" || cMode == "2") ? "12.5Khz" : (cMode == "9" ? "25Khz" : "BLANK");
 
                         // Squelch, Auto Scan, Lone Worker
                         string sal = btoh(ch[0]).Substring(0, 1);
                         // 4,5,C,D = Tight ; 6,7,E,F = Normal ; Everything Else Blank
-                        channel.Squelch = (cCheck(sal, "45CD") ? "TIGHT" : (cCheck(sal, "67EF") ? "NORMAL" : "BLANK"));
+                        channel.Squelch = (cCheck(sal, "45CD") ? "Tight" : (cCheck(sal, "67EF") ? "Normal" : "BLANK"));
                         // Auto Scan: 5,7,D,F Checked, else false
                         channel.AutoScan = cCheck(sal, "57DE");
                         // Lone Worker C,D,E,F
@@ -797,7 +797,7 @@ namespace MD380_Manager
                         //Encryption,Private Call,Data Call
                         string epd = btoh(ch[2]).Substring(0, 1);
                         // Encryption - None: 0,4,8,C ; Basic: 1,5,9,D ; Enhanced: 2,6,A,E
-                        dData.Privacy = cCheck(epd, "04BC") ? "NONE" : (cCheck(epd, "159D") ? "BASIC" : (cCheck(epd, "26AE") ? "ENHANCED" : ""));
+                        dData.Privacy = cCheck(epd, "04BC") ? "None" : (cCheck(epd, "159D") ? "Basic" : (cCheck(epd, "26AE") ? "Enhanced" : ""));
                         // Private Call Checked - 4,5,6,C,D,E
                         dData.PrivateCallConf = cCheck(epd, "456CDE");
                         // Data Call Checked - 8,9,A,C,D,E
@@ -939,7 +939,7 @@ namespace MD380_Manager
                         #region Channel Byte 20-23
                         string txfrq = btoh(ch[23]) + btoh(ch[22]) + btoh(ch[21]) + btoh(ch[20]);
                         if (txfrq != "FFFFFFFF")
-                            channel.TXRef = txfrq.Substring(0, 3) + "." + txfrq.Substring(3);
+                            channel.TXFreq = txfrq.Substring(0, 3) + "." + txfrq.Substring(3);
                         #endregion
 
                         #region Channel Byte 24-25
@@ -978,11 +978,19 @@ namespace MD380_Manager
                         {
                             aData.RXSignaling = "DTMF" + rxsig.ToString();
                         }
+                        else
+                        {
+                            aData.RXSignaling = "Off";
+                        }
 
                         int txsig = btoi(ch[29]);
                         if (txsig > 0)
                         {
                             aData.TXSignaling = "DTMF" + txsig.ToString();
+                        }
+                        else
+                        {
+                            aData.TXSignaling = "Off";
                         }
                         #endregion
 
@@ -1136,6 +1144,11 @@ namespace MD380_Manager
 
                 foreach (byte[] sc in sc_list)
                 {
+                    byte[] f = new byte[16];
+
+                    for (int i = 0; i < 16; i++)
+                        f[i] = byte.Parse("FF", NumberStyles.HexNumber);
+
                     ScanList slist = new ScanList();
                     
                     slist.GUID = Guid.NewGuid();
@@ -1145,29 +1158,29 @@ namespace MD380_Manager
                     // slist.PriorityChannelA
                     int iPChanA = htoi(batoh(sc.Slice(32, 2).Reverse().ToArray()));
                     if (iPChanA == 0) 
-                        slist.PriorityChannelA = "Selected";
+                        slist.PriorityChannelA = Guid.Empty;
                     else if (iPChanA == 65535)
-                        slist.PriorityChannelA = "None";
+                        slist.PriorityChannelA = new Guid(f);
                     else
-                        slist.PriorityChannelA = (Channels.ToArray())[iPChanA].GUID.ToString();
+                        slist.PriorityChannelA = (Channels.ToArray())[iPChanA-1].GUID;
                     
                     // slist.PriorityChannelB
                     int iPChanB = htoi(batoh(sc.Slice(34, 2).Reverse().ToArray()));
                     if (iPChanB == 0)
-                        slist.PriorityChannelB = "Selected";
+                        slist.PriorityChannelB = Guid.Empty;
                     else if (iPChanB == 65535)
-                        slist.PriorityChannelB = "None";
+                        slist.PriorityChannelB = new Guid(f);
                     else
-                        slist.PriorityChannelB = (Channels.ToArray())[iPChanB].GUID.ToString();
+                        slist.PriorityChannelB = (Channels.ToArray())[iPChanB-1].GUID;
                     
                     // slist.TxDesignatedChannel
                     int desChan = htoi(batoh(sc.Slice(36, 2).Reverse().ToArray()));
                     if (desChan == 0)
-                        slist.TxDesignatedChannel = "Selected";
+                        slist.TxDesignatedChannel = Guid.Empty;
                     else if (desChan == 65535)
-                        slist.TxDesignatedChannel = "Last Active";
+                        slist.TxDesignatedChannel = new Guid(f);
                     else
-                        slist.TxDesignatedChannel = (Channels.ToArray())[desChan].GUID.ToString();
+                        slist.TxDesignatedChannel = (Channels.ToArray())[desChan - 1].GUID;
 
                     // slist.PrioritySampleTime
                     slist.PrioritySampleTime = (btoi(sc[40]) * 250);
@@ -1206,6 +1219,7 @@ namespace MD380_Manager
             _inputFile = ReadFully(inputStream);
             _outputFile = new byte[_inputFile.Length];
             Array.Copy(_inputFile, _outputFile, _inputFile.Length);
+            
             initBasicInfo();
             initGeneralSettings();
             initMenuItems();

@@ -30,13 +30,13 @@ namespace MD380_Manager
         /// </summary>
         private void InitializeComponent()
         {
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn4 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewComboBoxColumn gridViewComboBoxColumn2 = new Telerik.WinControls.UI.GridViewComboBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn1 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewComboBoxColumn gridViewComboBoxColumn1 = new Telerik.WinControls.UI.GridViewComboBoxColumn();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn5 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewCheckBoxColumn gridViewCheckBoxColumn2 = new Telerik.WinControls.UI.GridViewCheckBoxColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn6 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.TableViewDefinition tableViewDefinition2 = new Telerik.WinControls.UI.TableViewDefinition();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn2 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewCheckBoxColumn gridViewCheckBoxColumn1 = new Telerik.WinControls.UI.GridViewCheckBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn3 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.TableViewDefinition tableViewDefinition1 = new Telerik.WinControls.UI.TableViewDefinition();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -112,7 +112,6 @@ namespace MD380_Manager
             this.label11 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.numericCallToneAlertDurationUpDown1 = new MD380_Manager.NumericCallToneAlertDurationUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.cmboGnTalkPermTone = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -123,7 +122,6 @@ namespace MD380_Manager
             this.chkGnSavePreamble = new System.Windows.Forms.CheckBox();
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.numericMenuHangTimeUpDown1 = new MD380_Manager.CustomControls.NumericMenuHangTimeUpDown();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.chkMnuEditList = new System.Windows.Forms.CheckBox();
             this.chkMnuScan = new System.Windows.Forms.CheckBox();
@@ -284,6 +282,8 @@ namespace MD380_Manager
             this.btnCHMvDwn = new System.Windows.Forms.Button();
             this.btnCHMvUp = new System.Windows.Forms.Button();
             this.lstChannels = new System.Windows.Forms.ListBox();
+            this.numericCallToneAlertDurationUpDown1 = new MD380_Manager.NumericCallToneAlertDurationUpDown();
+            this.numericMenuHangTimeUpDown1 = new MD380_Manager.CustomControls.NumericMenuHangTimeUpDown();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -304,11 +304,9 @@ namespace MD380_Manager
             ((System.ComponentModel.ISupportInitialize)(this.numAnlgHngTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numGnDigHngTime)).BeginInit();
             this.groupBox9.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericCallToneAlertDurationUpDown1)).BeginInit();
             this.groupBox8.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMenuHangTimeUpDown1)).BeginInit();
             this.groupBox7.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -326,6 +324,8 @@ namespace MD380_Manager
             this.groupBox20.SuspendLayout();
             this.groupBox19.SuspendLayout();
             this.groupBox18.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericCallToneAlertDurationUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMenuHangTimeUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -1192,23 +1192,6 @@ namespace MD380_Manager
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Alert Tone";
             // 
-            // numericCallToneAlertDurationUpDown1
-            // 
-            this.numericCallToneAlertDurationUpDown1.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericCallToneAlertDurationUpDown1.Location = new System.Drawing.Point(208, 69);
-            this.numericCallToneAlertDurationUpDown1.Maximum = new decimal(new int[] {
-            1200,
-            0,
-            0,
-            0});
-            this.numericCallToneAlertDurationUpDown1.Name = "numericCallToneAlertDurationUpDown1";
-            this.numericCallToneAlertDurationUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericCallToneAlertDurationUpDown1.TabIndex = 21;
-            // 
             // label9
             // 
             this.label9.Location = new System.Drawing.Point(7, 69);
@@ -1321,23 +1304,6 @@ namespace MD380_Manager
             this.groupBox3.TabIndex = 18;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Menu Items";
-            // 
-            // numericMenuHangTimeUpDown1
-            // 
-            this.numericMenuHangTimeUpDown1.Location = new System.Drawing.Point(135, 23);
-            this.numericMenuHangTimeUpDown1.Maximum = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-            this.numericMenuHangTimeUpDown1.Name = "numericMenuHangTimeUpDown1";
-            this.numericMenuHangTimeUpDown1.Size = new System.Drawing.Size(49, 20);
-            this.numericMenuHangTimeUpDown1.TabIndex = 7;
-            this.numericMenuHangTimeUpDown1.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
             // 
             // groupBox7
             // 
@@ -1745,43 +1711,43 @@ namespace MD380_Manager
             this.radGridContacts.MasterTemplate.AllowDeleteRow = false;
             this.radGridContacts.MasterTemplate.AllowDragToGroup = false;
             this.radGridContacts.MasterTemplate.AutoGenerateColumns = false;
-            gridViewTextBoxColumn4.EnableExpressionEditor = false;
-            gridViewTextBoxColumn4.FieldName = "Name";
-            gridViewTextBoxColumn4.HeaderText = "Contact Name";
-            gridViewTextBoxColumn4.Name = "colContactName";
-            gridViewTextBoxColumn4.Width = 200;
-            gridViewComboBoxColumn2.DataSource = ((object)(resources.GetObject("gridViewComboBoxColumn2.DataSource")));
-            gridViewComboBoxColumn2.EnableExpressionEditor = false;
-            gridViewComboBoxColumn2.FieldName = "CallType";
-            gridViewComboBoxColumn2.HeaderText = "Call Type";
-            gridViewComboBoxColumn2.Name = "colType";
-            gridViewComboBoxColumn2.Width = 100;
-            gridViewTextBoxColumn5.EnableExpressionEditor = false;
-            gridViewTextBoxColumn5.FieldName = "CallID";
-            gridViewTextBoxColumn5.HeaderText = "Call ID";
-            gridViewTextBoxColumn5.Name = "colCallID";
-            gridViewTextBoxColumn5.Width = 100;
-            gridViewCheckBoxColumn2.EnableExpressionEditor = false;
-            gridViewCheckBoxColumn2.FieldName = "receiveTone";
-            gridViewCheckBoxColumn2.HeaderText = "Call Receive Tone";
-            gridViewCheckBoxColumn2.MinWidth = 20;
-            gridViewCheckBoxColumn2.Name = "colCT";
-            gridViewCheckBoxColumn2.Width = 100;
-            gridViewTextBoxColumn6.EnableExpressionEditor = false;
-            gridViewTextBoxColumn6.FieldName = "GUID";
-            gridViewTextBoxColumn6.HeaderText = "GUID";
-            gridViewTextBoxColumn6.IsVisible = false;
-            gridViewTextBoxColumn6.Name = "colGUID";
-            gridViewTextBoxColumn6.ReadOnly = true;
+            gridViewTextBoxColumn1.EnableExpressionEditor = false;
+            gridViewTextBoxColumn1.FieldName = "Name";
+            gridViewTextBoxColumn1.HeaderText = "Contact Name";
+            gridViewTextBoxColumn1.Name = "colContactName";
+            gridViewTextBoxColumn1.Width = 200;
+            gridViewComboBoxColumn1.DataSource = ((object)(resources.GetObject("gridViewComboBoxColumn1.DataSource")));
+            gridViewComboBoxColumn1.EnableExpressionEditor = false;
+            gridViewComboBoxColumn1.FieldName = "CallType";
+            gridViewComboBoxColumn1.HeaderText = "Call Type";
+            gridViewComboBoxColumn1.Name = "colType";
+            gridViewComboBoxColumn1.Width = 100;
+            gridViewTextBoxColumn2.EnableExpressionEditor = false;
+            gridViewTextBoxColumn2.FieldName = "CallID";
+            gridViewTextBoxColumn2.HeaderText = "Call ID";
+            gridViewTextBoxColumn2.Name = "colCallID";
+            gridViewTextBoxColumn2.Width = 100;
+            gridViewCheckBoxColumn1.EnableExpressionEditor = false;
+            gridViewCheckBoxColumn1.FieldName = "receiveTone";
+            gridViewCheckBoxColumn1.HeaderText = "Call Receive Tone";
+            gridViewCheckBoxColumn1.MinWidth = 20;
+            gridViewCheckBoxColumn1.Name = "colCT";
+            gridViewCheckBoxColumn1.Width = 100;
+            gridViewTextBoxColumn3.EnableExpressionEditor = false;
+            gridViewTextBoxColumn3.FieldName = "GUID";
+            gridViewTextBoxColumn3.HeaderText = "GUID";
+            gridViewTextBoxColumn3.IsVisible = false;
+            gridViewTextBoxColumn3.Name = "colGUID";
+            gridViewTextBoxColumn3.ReadOnly = true;
             this.radGridContacts.MasterTemplate.Columns.AddRange(new Telerik.WinControls.UI.GridViewDataColumn[] {
-            gridViewTextBoxColumn4,
-            gridViewComboBoxColumn2,
-            gridViewTextBoxColumn5,
-            gridViewCheckBoxColumn2,
-            gridViewTextBoxColumn6});
+            gridViewTextBoxColumn1,
+            gridViewComboBoxColumn1,
+            gridViewTextBoxColumn2,
+            gridViewCheckBoxColumn1,
+            gridViewTextBoxColumn3});
             this.radGridContacts.MasterTemplate.EnableGrouping = false;
             this.radGridContacts.MasterTemplate.EnableSorting = false;
-            this.radGridContacts.MasterTemplate.ViewDefinition = tableViewDefinition2;
+            this.radGridContacts.MasterTemplate.ViewDefinition = tableViewDefinition1;
             this.radGridContacts.Name = "radGridContacts";
             this.radGridContacts.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.radGridContacts.Size = new System.Drawing.Size(789, 555);
@@ -2251,6 +2217,7 @@ namespace MD380_Manager
             this.btnScnChanMvUp.TabIndex = 8;
             this.btnScnChanMvUp.Text = "Move Up";
             this.btnScnChanMvUp.UseVisualStyleBackColor = true;
+            this.btnScnChanMvUp.Click += new System.EventHandler(this.btnScnChanMvUp_Click_1);
             // 
             // btnScnChanMvDwn
             // 
@@ -2260,6 +2227,7 @@ namespace MD380_Manager
             this.btnScnChanMvDwn.TabIndex = 9;
             this.btnScnChanMvDwn.Text = "Move Down";
             this.btnScnChanMvDwn.UseVisualStyleBackColor = true;
+            this.btnScnChanMvDwn.Click += new System.EventHandler(this.btnScnChanMvDwn_Click_1);
             // 
             // btnScnRemove
             // 
@@ -3750,6 +3718,40 @@ namespace MD380_Manager
             this.lstChannels.TabIndex = 11;
             this.lstChannels.SelectedIndexChanged += new System.EventHandler(this.lstChannels_SelectedIndexChanged);
             // 
+            // numericCallToneAlertDurationUpDown1
+            // 
+            this.numericCallToneAlertDurationUpDown1.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericCallToneAlertDurationUpDown1.Location = new System.Drawing.Point(208, 69);
+            this.numericCallToneAlertDurationUpDown1.Maximum = new decimal(new int[] {
+            1200,
+            0,
+            0,
+            0});
+            this.numericCallToneAlertDurationUpDown1.Name = "numericCallToneAlertDurationUpDown1";
+            this.numericCallToneAlertDurationUpDown1.Size = new System.Drawing.Size(120, 20);
+            this.numericCallToneAlertDurationUpDown1.TabIndex = 21;
+            // 
+            // numericMenuHangTimeUpDown1
+            // 
+            this.numericMenuHangTimeUpDown1.Location = new System.Drawing.Point(135, 23);
+            this.numericMenuHangTimeUpDown1.Maximum = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            this.numericMenuHangTimeUpDown1.Name = "numericMenuHangTimeUpDown1";
+            this.numericMenuHangTimeUpDown1.Size = new System.Drawing.Size(49, 20);
+            this.numericMenuHangTimeUpDown1.TabIndex = 7;
+            this.numericMenuHangTimeUpDown1.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3785,12 +3787,10 @@ namespace MD380_Manager
             ((System.ComponentModel.ISupportInitialize)(this.numAnlgHngTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numGnDigHngTime)).EndInit();
             this.groupBox9.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericCallToneAlertDurationUpDown1)).EndInit();
             this.groupBox8.ResumeLayout(false);
             this.tabPage7.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMenuHangTimeUpDown1)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
@@ -3812,6 +3812,8 @@ namespace MD380_Manager
             this.groupBox19.ResumeLayout(false);
             this.groupBox18.ResumeLayout(false);
             this.groupBox18.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericCallToneAlertDurationUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMenuHangTimeUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

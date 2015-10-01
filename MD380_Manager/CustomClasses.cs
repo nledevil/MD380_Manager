@@ -33,11 +33,11 @@ namespace MD380_Manager
         public Guid GUID { get; set; }
         public string ScanListName { get; set; }
         public List<Guid> ChannelMembers { get; set; }
-        public string PriorityChannelA { get; set; }
-        public string PriorityChannelB { get; set; }
+        public Guid PriorityChannelA { get; set; }
+        public Guid PriorityChannelB { get; set; }
         public int SignalingHoldTime { get; set; }
         public int PrioritySampleTime { get; set; }
-        public string TxDesignatedChannel { get; set; }
+        public Guid TxDesignatedChannel { get; set; }
     }
 
     public class EmergencySystem
