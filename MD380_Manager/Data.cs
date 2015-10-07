@@ -765,7 +765,7 @@ namespace MD380_Manager
                         #region Channel Byte 0
                         // Channel Mode (Analog/Digital)
                         string cMode = btoh(ch[0]).Substring(1, 1);
-                        channel.ChannelMode = (cMode == "9" || cMode == "1") ? "Analog" : (cMode == "2" ? "Digital" : "BLANK");
+                        channel.ChannelMode = (cMode == "9" || cMode == "1") ? "Analog" : (cMode == "2" ? "Digital" : "BLANK" + cMode);
                         channel.Bandwidth = (cMode == "1" || cMode == "2") ? "12.5Khz" : (cMode == "9" ? "25Khz" : "BLANK");
 
                         // Squelch, Auto Scan, Lone Worker
@@ -780,8 +780,7 @@ namespace MD380_Manager
 
                         #region Channel Byte 1
                         // Color Code
-                        string cCode = btoh(ch[1]).Substring(0, 1);
-                        dData.ColorCode = htoi(cCode);
+                        dData.ColorCode = htoi(btoh(ch[1]).Substring(0, 1));
 
                         // TS, RX Only, Talk Around
                         string trt = btoh(ch[1]).Substring(1, 1);
@@ -1030,7 +1029,240 @@ namespace MD380_Manager
         }
         private static void saveChannels()
         {
+            for (int ch = 0; ch < Channels.Count; ch++)
+            {
+                Channel channel = Channels[ch];
+                int bt = _ch_start+(ch*_ch_len);
 
+                #region Byte 0
+                // b00 - Squelch, Auto Scan, Lone Worker
+                List<string> s00 = createList("4567CDEF");
+                s00 = channel.Squelch == "Tight" ? filterList(s00, "45CD") : filterList(s00, "67EF");
+                s00 = channel.AutoScan ? filterList(s00, "57DE") : filterList(s00, "46CF");
+                s00 = channel.LoneWorker ? filterList(s00, "CDEF") : filterList(s00, "4567");
+                // b01 - Channel Mode/Bandwidth
+                string s01 = (channel.ChannelMode == "Analog" && channel.Bandwidth == "12.5Khz" ? "1" : (channel.ChannelMode == "Analog" ? "9" : channel.ChannelMode == "Digital" ? "2" : channel.ChannelMode.Replace("BLANK","")));
+                string ohex = _inputFile[bt].ToString("X2");
+                _outputFile[bt] = htob(s00[0] + s01);
+                #endregion
+
+                /*#region Byte 1
+                //_outputFile[_ch_start + (ch * _ch_len) + 1] = itob(channel.digital.ColorCode);
+                string s10 = channel.digital.ColorCode.ToString("X1");
+                List<string> s11 = createList("456789AB");
+                s11 = channel.digital.RepeaterSlot == 1 ? filterList(s11, "4567") : filterList(s11, "89AB");
+                s11 = channel.RXOnly ? filterList(s11, "67AB") : filterList(s11, "4589");
+                s11 = channel.AllowTalkaround ? filterList(s11, "579B") : filterList(s11, "468A");
+                _outputFile[_ch_start + (ch * _ch_len) + 1] = htob(s10 + s11[0]);
+                #endregion
+
+                #region Byte 2
+                List<string> s20 = createList("01245689ACDE");
+                s20 = channel.digital.Privacy == "Enhanced" ? filterList(s20, "26AE") : (channel.digital.Privacy == "Basic" ? filterList(s20, "159D") : filterList(s20, "04BC"));
+                s20 = channel.digital.PrivateCallConf ? filterList(s20, "456CDE") : filterList(s20, "01289A");
+                s20 = channel.digital.DataCallConf ? filterList(s20, "89ACDE") : filterList(s20, "012456");
+                string s21 = channel.digital.PrivacyNo.ToString("X1");
+                _outputFile[_ch_start + (ch * _ch_len) + 1] = htob(s20[0] + s21);
+                #endregion*/
+            }
+            
+            /*
+                        #region Channel Byte 3
+                        // Display PTT ID
+                        aData.DisplayPTTID = cCheck(btoh(ch[3]).Substring(0, 1), "6");
+                        // RX Reference
+                        string rxRef = btoh(ch[3]).Substring(1, 1);
+                        channel.RXRef = cCheck(rxRef, "08") ? "Low" : (cCheck(rxRef, "19") ? "Medium" : (cCheck(rxRef, "2A") ? "High" : ""));
+                        #endregion
+
+                        #region Channel Byte 4
+                        // Power, TX Ref, VOX, Admit Criteria
+                        string ptv = btoh(ch[4]).Substring(0, 1);
+                        string txRef = btoh(ch[4]).Substring(1, 1);
+                        // Power - Low: 0,1,4,5,8,9,C,D ; High: 2,3,6,7,A,B,E,F
+                        channel.Power = cCheck(ptv, "014589CD") ? "Low" : (cCheck(ptv, "2367ABEF") ? "High" : "");
+                        // TX Ref - Low: 0,4,8,C ; Med: 1,5,9,D ; High: 2,6,A,E
+                        channel.TXRef = cCheck(txRef, "048C") ? "Low" : (cCheck(txRef, "159D") ? "Medium" : (cCheck(txRef, "26AE") ? "High" : ""));
+                        // VOX - 1,3,5,7,9,B,D,F
+                        channel.VOX = cCheck(ptv, "13579BDF");
+                        // Admit Criteria - Always:0123 ; Channel:4567 ; CTCSS:89AB ; Color Code:CDEF
+                        channel.AdmitCriteria = cCheck(ptv, "0123") ? "Always" : (cCheck(ptv, "4567") ? "Channel" : (cCheck(ptv, "89AB") ? "CTCSS/DCS" : (cCheck(ptv, "CDEF") ? "Color Code" : "")));
+                        // QT Reverse
+                        aData.QTReverse = cCheck(txRef, "012456") ? 180 : (cCheck(txRef, "89ACDE") ? 120 : 0);
+                        #endregion
+
+                        #region Channel Byte 6-7
+                        int cntID = htoi(btoh(ch[7]) + btoh(ch[6]));
+                        if (cntID > 0 && cntID < 65535)
+                        {
+                            if (cntID <= Contacts.Count)
+                            {
+                                dData.ContactGuid = Contacts.ToArray()[cntID - 1].GUID;
+                            }
+                        }
+                        #endregion
+
+                        #region Channel Byte 8
+                        channel.TOT = (btoi(ch[8]) * 15);
+                        #endregion
+
+                        #region Channel Byte 9
+                        channel.TOTDelay = btoi(ch[9]);
+                        #endregion
+
+                        // TODO
+                        #region Channel Byte 10
+                        int eSys = btoi(ch[10]);
+                        if (eSys > 0)
+                        {
+                            //Get Emgcy System Guid
+
+                        }
+                        #endregion
+
+                        #region Channel Byte 11
+                        int sLID = btoi(ch[11]);
+                        _channelScanLists.Add(sLID);
+                        #endregion
+                        // END TODO
+
+                        #region Channel Byte 12
+                        int gChn = btoi(ch[12]);
+                        if (gChn > 0 && gChn < 65535)
+                        {
+                            if (gChn <= Groups.Count)
+                            {
+                                dData.GroupListGuid = Groups.ToArray()[gChn - 1].GUID;
+                            }
+                        }
+                        #endregion
+
+                        #region Channel Byte 14
+                        int dcs = btoi(ch[14]);
+                        RXSignalingDecode decodes = new RXSignalingDecode();
+                        // Decode 8
+                        if (dcs >= 128)
+                        {
+                            decodes.decode8 = true;
+                            dcs -= 128;
+                        }
+                        // Decode 7
+                        if (dcs >= 64)
+                        {
+                            decodes.decode7 = true;
+                            dcs -= 64;
+                        }
+                        // Decode 6
+                        if (dcs >= 32)
+                        {
+                            decodes.decode6 = true;
+                            dcs -= 32;
+                        }
+                        // Decode 5
+                        if (dcs >= 16)
+                        {
+                            decodes.decode5 = true;
+                            dcs -= 16;
+                        }
+                        // Decode 4
+                        if (dcs >= 8)
+                        {
+                            decodes.decode4 = true;
+                            dcs -= 8;
+                        }
+                        // Decode 3
+                        if (dcs >= 4)
+                        {
+                            decodes.decode3 = true;
+                            dcs -= 4;
+                        }
+                        // Decode 2
+                        if (dcs >= 2)
+                        {
+                            decodes.decode2 = true;
+                            dcs -= 2;
+                        }
+                        // Decode 1
+                        if (dcs >= 1)
+                        {
+                            decodes.decode1 = true;
+                            dcs--;
+                        }
+                        aData.decodes = decodes;
+                        #endregion
+
+                        #region Channel Byte 16-19
+                        string rxfrq = btoh(ch[19]) + btoh(ch[18]) + btoh(ch[17]) + btoh(ch[16]);
+                        if (rxfrq != "FFFFFFFF")
+                            channel.RXFreq = rxfrq.Substring(0, 3) + "." + rxfrq.Substring(3);
+                        #endregion
+
+                        #region Channel Byte 20-23
+                        string txfrq = btoh(ch[23]) + btoh(ch[22]) + btoh(ch[21]) + btoh(ch[20]);
+                        if (txfrq != "FFFFFFFF")
+                            channel.TXFreq = txfrq.Substring(0, 3) + "." + txfrq.Substring(3);
+                        #endregion
+
+                        #region Channel Byte 24-25
+                        string dcsDec = btoh(ch[25]) + btoh(ch[24]);
+                        if (dcsDec != "FFFF")
+                        {
+                            if (cCheck(dcsDec.Substring(0, 1), "8C"))
+                            {
+                                aData.CTCSSDecode = "D" + dcsDec.Substring(1, 3) + (dcsDec.Substring(0, 1) == "8" ? "N" : "I");
+                            }
+                            else
+                            {
+                                aData.CTCSSDecode = dcsDec.Substring(0, 3) + "." + dcsDec.Substring(3, 1);
+                            }
+                        }
+                        #endregion
+
+                        #region Channel Byte 26-27
+                        string dcsEnc = btoh(ch[27]) + btoh(ch[26]);
+                        if (dcsEnc != "FFFF")
+                        {
+                            if (cCheck(dcsEnc.Substring(0, 1), "8C"))
+                            {
+                                aData.CTCSSEncode = "D" + dcsEnc.Substring(1, 3) + (dcsEnc.Substring(0, 1) == "8" ? "N" : "I");
+                            }
+                            else
+                            {
+                                aData.CTCSSEncode = dcsEnc.Substring(0, 3) + "." + dcsEnc.Substring(3, 1);
+                            }
+                        }
+                        #endregion
+
+                        #region Channel Byte 28-29
+                        int rxsig = btoi(ch[28]);
+                        if (rxsig > 0)
+                        {
+                            aData.RXSignaling = "DTMF" + rxsig.ToString();
+                        }
+                        else
+                        {
+                            aData.RXSignaling = "Off";
+                        }
+
+                        int txsig = btoi(ch[29]);
+                        if (txsig > 0)
+                        {
+                            aData.TXSignaling = "DTMF" + txsig.ToString();
+                        }
+                        else
+                        {
+                            aData.TXSignaling = "Off";
+                        }
+                        #endregion
+
+                        #region Channel Bytes 32-63
+                        channel.ChannelName = (!string.IsNullOrEmpty(batoa(ch.Slice(32, 32))) ? batoa(ch.Slice(32, 32)) : "BLANK");
+                        #endregion
+
+                        channel.digital = dData;
+                        channel.analog = aData;
+
+                        Channels.Add(channel);*/
         }
         #endregion
         #region Groups

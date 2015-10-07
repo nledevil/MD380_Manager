@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.Exchange.WebServices.Data;
 using Telerik.WinControls.UI;
 
 namespace MD380_Manager
@@ -1016,10 +1017,11 @@ namespace MD380_Manager
                 cmboCHAdmitCriteria.Items.Add("Channel Free");
                 cmboCHAdmitCriteria.Items.Add("Color Code");
             }
-            cmboCHBandwidth.SelectedItem = "12.5Khz";
+            //cmboCHBandwidth.SelectedItem = "12.5Khz";
             cmboCHAdmitCriteria.SelectedItem = "Always";
+            if (lstChannels.SelectedIndex != -1)
+                MD380Data.Channels[lstChannels.SelectedIndex].ChannelMode = cmboCHChannelMode.SelectedItem.ToString();
         }
-
         private void cmboCHCTCSSEnc_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmboCHCTCSSEnc.SelectedItem != "None")
@@ -1032,6 +1034,11 @@ namespace MD380_Manager
                 cmboCHQTReverse.Enabled = false;
                 chkCHReverseBurst.Enabled = false;
             }
+        }
+        private void cmboCHBandwidth_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstChannels.SelectedIndex != -1)
+                MD380Data.Channels[lstChannels.SelectedIndex].Bandwidth = cmboCHBandwidth.SelectedItem.ToString();
         }
         #endregion
 
@@ -1085,7 +1092,51 @@ namespace MD380_Manager
 
         private void CheckFiles()
         {
-            MessageBox.Show("Result: "+MD380Data.checkData().ToString(), "Check Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            int crMonth = (int)DateTime.Now.Month;
+            //MessageBox.Show("Result: "+MD380Data.checkData().ToString(), "Check Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("10/01/15: " + TestDate(2015,10,1).ToString(), "TEST", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("10/02/15: " + TestDate(2015,10,2).ToString(), "TEST", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        private bool TestDate(int year,int month, int day)
+        {
+            try
+            {
+                DateTime retDate = new DateTime(year, month, day);
+
+                bool retPrevMonth = false;
+                //int dayOfTheWeek = (int)retDate.DayOfWeek; // 0-6 Sun to Sat
+                int dayOfTheMonth = (int)retDate.Day; // 1-31
+                int curMonth = (int)retDate.Month; // 1-12 Jan to Dec
+
+                if (curMonth != 10)
+                {
+                    if (dayOfTheMonth <= getLastBusDayOfMonth(Convert.ToInt32("1")))
+                        retPrevMonth = true;
+                }
+                else
+                {
+                    if (dayOfTheMonth <= getLastBusDayOfMonth(Convert.ToInt32("2")))
+                        retPrevMonth = true;
+                }
+                return retPrevMonth;
+            }
+            catch (Exception ex) { throw ex; }
+        }
+        private int getLastBusDayOfMonth(int numBusDays)
+        {
+            int retDays = 0;
+            for (int i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
+            {
+                DateTime lDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, i);
+                retDays++;
+                if ((int)lDate.DayOfWeek > 0 && (int)lDate.DayOfWeek < 6)
+                {
+                    numBusDays--;
+                    if (numBusDays==0)
+                        i = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) + 1;
+                }
+            }
+            return retDays;
         }
         private void ddlBscFreqRange_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1097,9 +1148,5 @@ namespace MD380_Manager
                 }
             }
         }
-
-        
-
-        
     }
 }
