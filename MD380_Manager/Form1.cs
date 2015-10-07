@@ -1092,7 +1092,6 @@ namespace MD380_Manager
 
         private void CheckFiles()
         {
-            int crMonth = (int)DateTime.Now.Month;
             MessageBox.Show("Result: "+MD380Data.checkData().ToString(), "Check Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         
