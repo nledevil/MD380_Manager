@@ -1046,7 +1046,7 @@ namespace MD380_Manager
                 _outputFile[bt] = htob(s00[0] + s01);
                 #endregion
 
-                /*#region Byte 1
+                #region Byte 1
                 //_outputFile[_ch_start + (ch * _ch_len) + 1] = itob(channel.digital.ColorCode);
                 string s10 = channel.digital.ColorCode.ToString("X1");
                 List<string> s11 = createList("456789AB");
@@ -1056,7 +1056,7 @@ namespace MD380_Manager
                 _outputFile[_ch_start + (ch * _ch_len) + 1] = htob(s10 + s11[0]);
                 #endregion
 
-                #region Byte 2
+                /*#region Byte 2
                 List<string> s20 = createList("01245689ACDE");
                 s20 = channel.digital.Privacy == "Enhanced" ? filterList(s20, "26AE") : (channel.digital.Privacy == "Basic" ? filterList(s20, "159D") : filterList(s20, "04BC"));
                 s20 = channel.digital.PrivateCallConf ? filterList(s20, "456CDE") : filterList(s20, "01289A");

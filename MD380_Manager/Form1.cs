@@ -1093,51 +1093,9 @@ namespace MD380_Manager
         private void CheckFiles()
         {
             int crMonth = (int)DateTime.Now.Month;
-            //MessageBox.Show("Result: "+MD380Data.checkData().ToString(), "Check Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            MessageBox.Show("10/01/15: " + TestDate(2015,10,1).ToString(), "TEST", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            MessageBox.Show("10/02/15: " + TestDate(2015,10,2).ToString(), "TEST", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Result: "+MD380Data.checkData().ToString(), "Check Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        private bool TestDate(int year,int month, int day)
-        {
-            try
-            {
-                DateTime retDate = new DateTime(year, month, day);
-
-                bool retPrevMonth = false;
-                //int dayOfTheWeek = (int)retDate.DayOfWeek; // 0-6 Sun to Sat
-                int dayOfTheMonth = (int)retDate.Day; // 1-31
-                int curMonth = (int)retDate.Month; // 1-12 Jan to Dec
-
-                if (curMonth != 10)
-                {
-                    if (dayOfTheMonth <= getLastBusDayOfMonth(Convert.ToInt32("1")))
-                        retPrevMonth = true;
-                }
-                else
-                {
-                    if (dayOfTheMonth <= getLastBusDayOfMonth(Convert.ToInt32("2")))
-                        retPrevMonth = true;
-                }
-                return retPrevMonth;
-            }
-            catch (Exception ex) { throw ex; }
-        }
-        private int getLastBusDayOfMonth(int numBusDays)
-        {
-            int retDays = 0;
-            for (int i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
-            {
-                DateTime lDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, i);
-                retDays++;
-                if ((int)lDate.DayOfWeek > 0 && (int)lDate.DayOfWeek < 6)
-                {
-                    numBusDays--;
-                    if (numBusDays==0)
-                        i = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) + 1;
-                }
-            }
-            return retDays;
-        }
+        
         private void ddlBscFreqRange_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!object.Equals(MD380Data.Basic_Info, null))
