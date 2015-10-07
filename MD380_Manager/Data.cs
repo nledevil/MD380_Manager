@@ -811,6 +811,8 @@ namespace MD380_Manager
                         // RX Reference
                         string rxRef = btoh(ch[3]).Substring(1, 1);
                         channel.RXRef = cCheck(rxRef, "08") ? "Low" : (cCheck(rxRef, "19") ? "Medium" : (cCheck(rxRef, "2A") ? "High" : ""));
+                        // Emergency Alarm Ack
+                        dData.EmergencyAlarmAck = cCheck(rxRef, "89A");
                         #endregion
 
                         #region Channel Byte 4
@@ -1032,7 +1034,7 @@ namespace MD380_Manager
             for (int ch = 0; ch < Channels.Count; ch++)
             {
                 Channel channel = Channels[ch];
-                int bt = _ch_start+(ch*_ch_len);
+                int bt = _ch_start + (ch * _ch_len);
 
                 #region Byte 0
                 // b00 - Squelch, Auto Scan, Lone Worker
@@ -1041,40 +1043,48 @@ namespace MD380_Manager
                 s00 = channel.AutoScan ? filterList(s00, "57DE") : filterList(s00, "46CF");
                 s00 = channel.LoneWorker ? filterList(s00, "CDEF") : filterList(s00, "4567");
                 // b01 - Channel Mode/Bandwidth
-                string s01 = (channel.ChannelMode == "Analog" && channel.Bandwidth == "12.5Khz" ? "1" : (channel.ChannelMode == "Analog" ? "9" : channel.ChannelMode == "Digital" ? "2" : channel.ChannelMode.Replace("BLANK","")));
+                string s01 = (channel.ChannelMode == "Analog" && channel.Bandwidth == "12.5Khz" ? "1" : (channel.ChannelMode == "Analog" ? "9" : channel.ChannelMode == "Digital" ? "2" : channel.ChannelMode.Replace("BLANK", "")));
                 string ohex = _inputFile[bt].ToString("X2");
                 _outputFile[bt] = htob(s00[0] + s01);
                 #endregion
 
                 #region Byte 1
-                //_outputFile[_ch_start + (ch * _ch_len) + 1] = itob(channel.digital.ColorCode);
                 string s10 = channel.digital.ColorCode.ToString("X1");
                 List<string> s11 = createList("456789AB");
                 s11 = channel.digital.RepeaterSlot == 1 ? filterList(s11, "4567") : filterList(s11, "89AB");
                 s11 = channel.RXOnly ? filterList(s11, "67AB") : filterList(s11, "4589");
                 s11 = channel.AllowTalkaround ? filterList(s11, "579B") : filterList(s11, "468A");
-                _outputFile[_ch_start + (ch * _ch_len) + 1] = htob(s10 + s11[0]);
+                string ns1 = (s10 + s11[0]) == "F8" ? "FF" : s10 + s11[0];
+                _outputFile[_ch_start + (ch * _ch_len) + 1] = htob(ns1);
                 #endregion
 
-                /*#region Byte 2
+                #region Byte 2
                 List<string> s20 = createList("01245689ACDE");
                 s20 = channel.digital.Privacy == "Enhanced" ? filterList(s20, "26AE") : (channel.digital.Privacy == "Basic" ? filterList(s20, "159D") : filterList(s20, "04BC"));
                 s20 = channel.digital.PrivateCallConf ? filterList(s20, "456CDE") : filterList(s20, "01289A");
                 s20 = channel.digital.DataCallConf ? filterList(s20, "89ACDE") : filterList(s20, "012456");
                 string s21 = channel.digital.PrivacyNo.ToString("X1");
-                _outputFile[_ch_start + (ch * _ch_len) + 1] = htob(s20[0] + s21);
-                #endregion*/
+                string os2 = btoh(_inputFile[_ch_start + (ch * _ch_len) + 2]);
+                string ns2 = (s20[0] + s21) == "0F" ? "FF" : s20[0] + s21;
+                _outputFile[_ch_start + (ch * _ch_len) + 2] = htob(ns2);
+                #endregion
+
+                #region Byte 3
+                string s30 = channel.analog.DisplayPTTID ? "6" : "E";
+                List<string> s31 = createList("01289AF");
+                s31 = channel.digital.EmergencyAlarmAck ? filterList(s31, "89A") : filterList(s31, "012F");
+                s31 = channel.RXRef == "Low" ? filterList(s31, "08") : (channel.RXRef == "Medium" ? filterList(s31, "19") : (channel.RXRef == "High" ? filterList(s31, "2A") : filterList(s31, "F")));
+                string ns3 = (s30 + s31[0]) == "EF" ? "FF" : s30 + s31[0];
+                string os3 = btoh(_inputFile[_ch_start + (ch * _ch_len) + 3]);
+                _outputFile[_ch_start + (ch * _ch_len) + 3] = htob(ns3);
+                #endregion
+
+                #region Byte 4
+
+                #endregion
             }
             
             /*
-                        #region Channel Byte 3
-                        // Display PTT ID
-                        aData.DisplayPTTID = cCheck(btoh(ch[3]).Substring(0, 1), "6");
-                        // RX Reference
-                        string rxRef = btoh(ch[3]).Substring(1, 1);
-                        channel.RXRef = cCheck(rxRef, "08") ? "Low" : (cCheck(rxRef, "19") ? "Medium" : (cCheck(rxRef, "2A") ? "High" : ""));
-                        #endregion
-
                         #region Channel Byte 4
                         // Power, TX Ref, VOX, Admit Criteria
                         string ptv = btoh(ch[4]).Substring(0, 1);
