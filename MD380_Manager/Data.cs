@@ -829,6 +829,8 @@ namespace MD380_Manager
                         channel.AdmitCriteria = cCheck(ptv, "0123") ? "Always" : (cCheck(ptv, "4567") ? "Channel" : (cCheck(ptv, "89AB") ? "CTCSS/DCS" : (cCheck(ptv, "CDEF") ? "Color Code" : "")));
                         // QT Reverse
                         aData.QTReverse = cCheck(txRef, "012456") ? 180 : (cCheck(txRef, "89ACDE") ? 120 : 0);
+                        // Reverse Burst
+                        aData.ReverseBurst = cCheck(txRef, "01289A");
                         #endregion
 
                         #region Channel Byte 6-7
@@ -1064,7 +1066,6 @@ namespace MD380_Manager
                 s20 = channel.digital.PrivateCallConf ? filterList(s20, "456CDE") : filterList(s20, "01289A");
                 s20 = channel.digital.DataCallConf ? filterList(s20, "89ACDE") : filterList(s20, "012456");
                 string s21 = channel.digital.PrivacyNo.ToString("X1");
-                string os2 = btoh(_inputFile[_ch_start + (ch * _ch_len) + 2]);
                 string ns2 = (s20[0] + s21) == "0F" ? "FF" : s20[0] + s21;
                 _outputFile[_ch_start + (ch * _ch_len) + 2] = htob(ns2);
                 #endregion
@@ -1075,32 +1076,28 @@ namespace MD380_Manager
                 s31 = channel.digital.EmergencyAlarmAck ? filterList(s31, "89A") : filterList(s31, "012F");
                 s31 = channel.RXRef == "Low" ? filterList(s31, "08") : (channel.RXRef == "Medium" ? filterList(s31, "19") : (channel.RXRef == "High" ? filterList(s31, "2A") : filterList(s31, "F")));
                 string ns3 = (s30 + s31[0]) == "EF" ? "FF" : s30 + s31[0];
-                string os3 = btoh(_inputFile[_ch_start + (ch * _ch_len) + 3]);
                 _outputFile[_ch_start + (ch * _ch_len) + 3] = htob(ns3);
                 #endregion
 
                 #region Byte 4
+                List<string> s40 = createList("0123456789ABCDEF");
+                s40 = channel.Power == "Low" ? filterList(s40, "014589CD") : filterList(s40, "2367ABEF");
+                s40 = channel.VOX ? filterList(s40, "13579BDF") : filterList(s40, "02468ACE");
+                s40 = channel.AdmitCriteria == "Always" ? filterList(s40,"0123") : (channel.AdmitCriteria == "Channel" ? filterList(s40,"4567") : (channel.AdmitCriteria == "CTCSS/DCS" ? filterList(s40,"89AB") : filterList(s40,"CDEF")));
+
+                List<string> s41 = createList("01245689ACDEF");
+                s41 = channel.TXRef == "Low" ? filterList(s41,"048C") : (channel.TXRef == "Medium" ? filterList(s41,"159D") : (channel.TXRef == "High" ? filterList(s41,"26AE") : filterList(s41,"F")));
+                s41 = channel.analog.QTReverse == 180 ? filterList(s41, "012456") : (channel.analog.QTReverse == 120 ? filterList(s41, "89ACDE") : filterList(s41, "F"));
+                s41 = channel.analog.ReverseBurst ? filterList(s41, "01289A") : filterList(s41, "456CDEF");
+                string ns4 = s40[0] + s41[0];
+                _outputFile[_ch_start + (ch * _ch_len) + 4] = htob(ns4);
+                #endregion
+
+                #region Byte 6-7
 
                 #endregion
             }
-            
             /*
-                        #region Channel Byte 4
-                        // Power, TX Ref, VOX, Admit Criteria
-                        string ptv = btoh(ch[4]).Substring(0, 1);
-                        string txRef = btoh(ch[4]).Substring(1, 1);
-                        // Power - Low: 0,1,4,5,8,9,C,D ; High: 2,3,6,7,A,B,E,F
-                        channel.Power = cCheck(ptv, "014589CD") ? "Low" : (cCheck(ptv, "2367ABEF") ? "High" : "");
-                        // TX Ref - Low: 0,4,8,C ; Med: 1,5,9,D ; High: 2,6,A,E
-                        channel.TXRef = cCheck(txRef, "048C") ? "Low" : (cCheck(txRef, "159D") ? "Medium" : (cCheck(txRef, "26AE") ? "High" : ""));
-                        // VOX - 1,3,5,7,9,B,D,F
-                        channel.VOX = cCheck(ptv, "13579BDF");
-                        // Admit Criteria - Always:0123 ; Channel:4567 ; CTCSS:89AB ; Color Code:CDEF
-                        channel.AdmitCriteria = cCheck(ptv, "0123") ? "Always" : (cCheck(ptv, "4567") ? "Channel" : (cCheck(ptv, "89AB") ? "CTCSS/DCS" : (cCheck(ptv, "CDEF") ? "Color Code" : "")));
-                        // QT Reverse
-                        aData.QTReverse = cCheck(txRef, "012456") ? 180 : (cCheck(txRef, "89ACDE") ? 120 : 0);
-                        #endregion
-
                         #region Channel Byte 6-7
                         int cntID = htoi(btoh(ch[7]) + btoh(ch[6]));
                         if (cntID > 0 && cntID < 65535)
