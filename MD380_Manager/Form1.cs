@@ -42,7 +42,6 @@ namespace MD380_Manager
 
             // Contacts Tab
            
-
             // Channels Tab
             cmboCHTOTRekeyDelay.Items.Clear();
             for (int i = 0; i < 256; i++)
