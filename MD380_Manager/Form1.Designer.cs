@@ -30,13 +30,7 @@ namespace MD380_Manager
         /// </summary>
         private void InitializeComponent()
         {
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn1 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewComboBoxColumn gridViewComboBoxColumn1 = new Telerik.WinControls.UI.GridViewComboBoxColumn();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn2 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewCheckBoxColumn gridViewCheckBoxColumn1 = new Telerik.WinControls.UI.GridViewCheckBoxColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn3 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.TableViewDefinition tableViewDefinition1 = new Telerik.WinControls.UI.TableViewDefinition();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -155,7 +149,6 @@ namespace MD380_Manager
             this.lblMenuHangTime = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.radGridContacts = new Telerik.WinControls.UI.RadGridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnGrpLstMoveDown = new System.Windows.Forms.Button();
             this.btnGrpLstMoveUp = new System.Windows.Forms.Button();
@@ -312,8 +305,8 @@ namespace MD380_Manager
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radGridContacts)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radGridContacts.MasterTemplate)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.radGridContacts)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.radGridContacts.MasterTemplate)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -1685,7 +1678,7 @@ namespace MD380_Manager
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.radGridContacts);
+            //this.tabPage1.Controls.Add(this.radGridContacts);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -1693,65 +1686,6 @@ namespace MD380_Manager
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Contacts";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // radGridContacts
-            // 
-            this.radGridContacts.BackColor = System.Drawing.SystemColors.Control;
-            this.radGridContacts.Cursor = System.Windows.Forms.Cursors.Default;
-            this.radGridContacts.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.radGridContacts.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.radGridContacts.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.radGridContacts.Location = new System.Drawing.Point(7, 7);
-            // 
-            // 
-            // 
-            this.radGridContacts.MasterTemplate.AllowAddNewRow = false;
-            this.radGridContacts.MasterTemplate.AllowColumnChooser = false;
-            this.radGridContacts.MasterTemplate.AllowColumnReorder = false;
-            this.radGridContacts.MasterTemplate.AllowDeleteRow = false;
-            this.radGridContacts.MasterTemplate.AllowDragToGroup = false;
-            this.radGridContacts.MasterTemplate.AutoGenerateColumns = false;
-            gridViewTextBoxColumn1.EnableExpressionEditor = false;
-            gridViewTextBoxColumn1.FieldName = "Name";
-            gridViewTextBoxColumn1.HeaderText = "Contact Name";
-            gridViewTextBoxColumn1.Name = "colContactName";
-            gridViewTextBoxColumn1.Width = 200;
-            gridViewComboBoxColumn1.DataSource = ((object)(resources.GetObject("gridViewComboBoxColumn1.DataSource")));
-            gridViewComboBoxColumn1.EnableExpressionEditor = false;
-            gridViewComboBoxColumn1.FieldName = "CallType";
-            gridViewComboBoxColumn1.HeaderText = "Call Type";
-            gridViewComboBoxColumn1.Name = "colType";
-            gridViewComboBoxColumn1.Width = 100;
-            gridViewTextBoxColumn2.EnableExpressionEditor = false;
-            gridViewTextBoxColumn2.FieldName = "CallID";
-            gridViewTextBoxColumn2.HeaderText = "Call ID";
-            gridViewTextBoxColumn2.Name = "colCallID";
-            gridViewTextBoxColumn2.Width = 100;
-            gridViewCheckBoxColumn1.EnableExpressionEditor = false;
-            gridViewCheckBoxColumn1.FieldName = "receiveTone";
-            gridViewCheckBoxColumn1.HeaderText = "Call Receive Tone";
-            gridViewCheckBoxColumn1.MinWidth = 20;
-            gridViewCheckBoxColumn1.Name = "colCT";
-            gridViewCheckBoxColumn1.Width = 100;
-            gridViewTextBoxColumn3.EnableExpressionEditor = false;
-            gridViewTextBoxColumn3.FieldName = "GUID";
-            gridViewTextBoxColumn3.HeaderText = "GUID";
-            gridViewTextBoxColumn3.IsVisible = false;
-            gridViewTextBoxColumn3.Name = "colGUID";
-            gridViewTextBoxColumn3.ReadOnly = true;
-            this.radGridContacts.MasterTemplate.Columns.AddRange(new Telerik.WinControls.UI.GridViewDataColumn[] {
-            gridViewTextBoxColumn1,
-            gridViewComboBoxColumn1,
-            gridViewTextBoxColumn2,
-            gridViewCheckBoxColumn1,
-            gridViewTextBoxColumn3});
-            this.radGridContacts.MasterTemplate.EnableGrouping = false;
-            this.radGridContacts.MasterTemplate.EnableSorting = false;
-            this.radGridContacts.MasterTemplate.ViewDefinition = tableViewDefinition1;
-            this.radGridContacts.Name = "radGridContacts";
-            this.radGridContacts.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.radGridContacts.Size = new System.Drawing.Size(789, 555);
-            this.radGridContacts.TabIndex = 0;
             // 
             // tabPage2
             // 
@@ -3797,8 +3731,8 @@ namespace MD380_Manager
             this.groupBox5.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.radGridContacts.MasterTemplate)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radGridContacts)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.radGridContacts.MasterTemplate)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.radGridContacts)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -3829,7 +3763,6 @@ namespace MD380_Manager
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private Telerik.WinControls.UI.RadGridView radGridContacts;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;

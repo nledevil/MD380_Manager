@@ -4,18 +4,17 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Exchange.WebServices.Data;
-using Telerik.WinControls.UI;
 
 namespace MD380_Manager
 {
     public partial class Form1 : Form
     {
         private byte[] _F;
-        private RadContextMenu cntContextMenu;
+        //private RadContextMenu cntContextMenu;
         public Form1()
         {
             InitializeComponent();
-            radGridContacts.ContextMenuOpening += radGridContacts_ContextMenuOpening;
+            //radGridContacts.ContextMenuOpening += radGridContacts_ContextMenuOpening;
             txtGroupListName.Leave += txtGroupListName_TextChanged;
             initControls();
         }
@@ -42,15 +41,7 @@ namespace MD380_Manager
             cmboGnIntroScreen.SelectedItem = "Picture";
 
             // Contacts Tab
-            cntContextMenu = new RadContextMenu();
-            RadMenuItem mvUp = new RadMenuItem();
-            mvUp.Text = "Move Up";
-            mvUp.Click += new EventHandler(cntMoveUp);
-            cntContextMenu.Items.Add(mvUp);
-            RadMenuItem mvDwn = new RadMenuItem();
-            mvDwn.Text = "Move Down";
-            mvDwn.Click += new EventHandler(cntMoveDown);
-            cntContextMenu.Items.Add(mvDwn);
+           
 
             // Channels Tab
             cmboCHTOTRekeyDelay.Items.Clear();
@@ -278,100 +269,9 @@ namespace MD380_Manager
         #region Contacts
         private void loadContacts()
         {
-            radGridContacts.DataSource = MD380Data.Contacts.Where(a =>a.CallType != "BLANK");
-        }
-        void radGridContacts_DataBindingComplete(object sender, Telerik.WinControls.UI.GridViewBindingCompleteEventArgs e)
-        {
-            foreach (GridViewRowInfo row in radGridContacts.Rows)
-            {
-                if (row.Cells[1].Value == "ALL CALL")
-                {
-                    // 16777215
-                    row.Cells[2].ReadOnly = true;
-                }
-            }
-        }
-        void radGridContacts_ContextMenuOpening(object sender, Telerik.WinControls.UI.ContextMenuOpeningEventArgs e)
-        {
-            if (radGridContacts.CurrentRow.Index <= 0)
-                cntContextMenu.Items[0].Enabled = false;
-            else
-                cntContextMenu.Items[0].Enabled = true;
-
-            if (radGridContacts.CurrentRow.Index == (radGridContacts.Rows.Count - 1) || radGridContacts.CurrentRow.Index == -1)
-                cntContextMenu.Items[1].Enabled = false;
-            else
-                cntContextMenu.Items[1].Enabled = true;
-
-            e.ContextMenu = cntContextMenu.DropDown;
-        }
-        void radGridContacts_CellValidating(object sender, Telerik.WinControls.UI.CellValidatingEventArgs e)
-        {
-            switch (e.ColumnIndex)
-            {
-                case 0:
-                    // Contact Name
-                    break;
-                case 1:
-                    // Contact Type
-                    break;
-                case 2:
-                    // Contact ID
-                    string oldVal = !object.Equals(e.OldValue, null) ? e.OldValue.ToString() : "";
-                    string newVal = !object.Equals(e.Value, null) ? e.Value.ToString() : "";
-                    string callType = !object.Equals(e.Row.Cells[1].Value, null) ? e.Row.Cells[1].Value.ToString() : "";
-                    foreach (Contact cnt in MD380Data.Contacts.Where(a => a.CallID.ToString() != oldVal))
-                    {
-                        
-                        if (cnt.CallID.ToString() == newVal && cnt.CallType == callType)
-                        {
-                            e.Cancel = true;
-                            MessageBox.Show("ID Already Exists", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    break;
-                case 3:
-                    // Contact Receive Tone
-                    break;
-            }
             
         }
-        void cntMoveUp(object sender, EventArgs e)
-        {
-            int idx = radGridContacts.CurrentRow.Index;
-            if (idx > 0)
-            {
-                Contact cnt = MD380Data.Contacts[idx];
-                MD380Data.Contacts.RemoveAt(idx);
-                MD380Data.Contacts.Insert(idx - 1, cnt);
-                loadContacts();
-                radGridContacts.Rows[idx - 1].IsSelected = true;
-                radGridContacts.Rows[idx - 1].IsCurrent = true;
-                GridTableElement tblEl = this.radGridContacts.CurrentView as GridTableElement;
-                if (tblEl != null && radGridContacts.CurrentRow != null)
-                {
-                    tblEl.ScrollToRow(radGridContacts.CurrentRow);
-                }
-            }
-        }
-        void cntMoveDown(object sender, EventArgs e)
-        {
-            int idx = radGridContacts.CurrentRow.Index;
-            if (idx < (radGridContacts.Rows.Count - 1))
-            {
-                Contact cnt = MD380Data.Contacts[idx];
-                MD380Data.Contacts.RemoveAt(idx);
-                MD380Data.Contacts.Insert(idx + 1, cnt);
-                loadContacts();
-                radGridContacts.Rows[idx + 1].IsSelected = true;
-                radGridContacts.Rows[idx + 1].IsCurrent = true;
-                GridTableElement tblEl = this.radGridContacts.CurrentView as GridTableElement;
-                if (tblEl != null && radGridContacts.CurrentRow != null)
-                {
-                    tblEl.ScrollToRow(radGridContacts.CurrentRow);
-                }
-            }
-        }
+        
         #endregion
 
         #region Group Lists
