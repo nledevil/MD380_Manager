@@ -4,18 +4,16 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Exchange.WebServices.Data;
-using Telerik.WinControls.UI;
-
 namespace MD380_Manager
 {
     public partial class Form1 : Form
     {
         private byte[] _F;
-        private RadContextMenu cntContextMenu;
+        //private RadContextMenu cntContextMenu;
         public Form1()
         {
             InitializeComponent();
-            radGridContacts.ContextMenuOpening += radGridContacts_ContextMenuOpening;
+            //radGridContacts.ContextMenuOpening += radGridContacts_ContextMenuOpening;
             txtGroupListName.Leave += txtGroupListName_TextChanged;
             initControls();
         }
@@ -42,7 +40,7 @@ namespace MD380_Manager
             cmboGnIntroScreen.SelectedItem = "Picture";
 
             // Contacts Tab
-            cntContextMenu = new RadContextMenu();
+            /*cntContextMenu = new RadContextMenu();
             RadMenuItem mvUp = new RadMenuItem();
             mvUp.Text = "Move Up";
             mvUp.Click += new EventHandler(cntMoveUp);
@@ -50,7 +48,7 @@ namespace MD380_Manager
             RadMenuItem mvDwn = new RadMenuItem();
             mvDwn.Text = "Move Down";
             mvDwn.Click += new EventHandler(cntMoveDown);
-            cntContextMenu.Items.Add(mvDwn);
+            cntContextMenu.Items.Add(mvDwn);*/
 
             // Channels Tab
             cmboCHTOTRekeyDelay.Items.Clear();
@@ -278,9 +276,9 @@ namespace MD380_Manager
         #region Contacts
         private void loadContacts()
         {
-            radGridContacts.DataSource = MD380Data.Contacts.Where(a =>a.CallType != "BLANK");
+            //radGridContacts.DataSource = MD380Data.Contacts.Where(a =>a.CallType != "BLANK");
         }
-        void radGridContacts_DataBindingComplete(object sender, Telerik.WinControls.UI.GridViewBindingCompleteEventArgs e)
+        /*void radGridContacts_DataBindingComplete(object sender, Telerik.WinControls.UI.GridViewBindingCompleteEventArgs e)
         {
             foreach (GridViewRowInfo row in radGridContacts.Rows)
             {
@@ -335,8 +333,8 @@ namespace MD380_Manager
                     break;
             }
             
-        }
-        void cntMoveUp(object sender, EventArgs e)
+        }*/
+        /*void cntMoveUp(object sender, EventArgs e)
         {
             int idx = radGridContacts.CurrentRow.Index;
             if (idx > 0)
@@ -371,7 +369,7 @@ namespace MD380_Manager
                     tblEl.ScrollToRow(radGridContacts.CurrentRow);
                 }
             }
-        }
+        }*/
         #endregion
 
         #region Group Lists
