@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Exchange.WebServices.Data;
+
 namespace MD380_Manager
 {
     public partial class Form1 : Form
@@ -296,30 +297,7 @@ namespace MD380_Manager
             else
                 cntContextMenu.Items[0].Enabled = true;
 
-            if (radGridContacts.CurrentRow.Index == (radGridContacts.Rows.Count - 1) || radGridContacts.CurrentRow.Index == -1)
-                cntContextMenu.Items[1].Enabled = false;
-            else
-                cntContextMenu.Items[1].Enabled = true;
-
-            e.ContextMenu = cntContextMenu.DropDown;
         }
-        void radGridContacts_CellValidating(object sender, Telerik.WinControls.UI.CellValidatingEventArgs e)
-        {
-            switch (e.ColumnIndex)
-            {
-                case 0:
-                    // Contact Name
-                    break;
-                case 1:
-                    // Contact Type
-                    break;
-                case 2:
-                    // Contact ID
-                    string oldVal = !object.Equals(e.OldValue, null) ? e.OldValue.ToString() : "";
-                    string newVal = !object.Equals(e.Value, null) ? e.Value.ToString() : "";
-                    string callType = !object.Equals(e.Row.Cells[1].Value, null) ? e.Row.Cells[1].Value.ToString() : "";
-                    foreach (Contact cnt in MD380Data.Contacts.Where(a => a.CallID.ToString() != oldVal))
-                    {
                         
                         if (cnt.CallID.ToString() == newVal && cnt.CallType == callType)
                         {
@@ -333,8 +311,8 @@ namespace MD380_Manager
                     break;
             }
             
-        }*/
-        /*void cntMoveUp(object sender, EventArgs e)
+        }
+        void cntMoveUp(object sender, EventArgs e)
         {
             int idx = radGridContacts.CurrentRow.Index;
             if (idx > 0)

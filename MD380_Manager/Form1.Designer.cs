@@ -1676,7 +1676,6 @@ namespace MD380_Manager
             // 
             // tabPage1
             // 
-            //this.tabPage1.Controls.Add(this.radGridContacts);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -3759,7 +3758,6 @@ namespace MD380_Manager
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        //private Telerik.WinControls.UI.RadGridView radGridContacts;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
