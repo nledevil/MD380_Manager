@@ -45,6 +45,7 @@ namespace MD380_Manager
             dataGridViewContacts.CellValueChanged += dataGridViewContacts_CellValueChanged;
             dataGridViewContacts.CellContentClick += dataGridViewContacts_CellContentClick;
             dataGridViewContacts.CurrentCellDirtyStateChanged += dataGridViewContacts_CurrentCellDirtyStateChanged;
+            dataGridViewContacts.DefaultValuesNeeded += dataGridViewContacts_DefaultValuesNeeded;
 
             // Channels Tab
             cmboCHTOTRekeyDelay.Items.Clear();
@@ -53,8 +54,6 @@ namespace MD380_Manager
 
                 initChannels();
         }
-
-        
         private void refreshScreens()
         {
             initScanLists();
@@ -276,15 +275,17 @@ namespace MD380_Manager
             dataGridViewContacts.Rows.Clear();
             if (!object.Equals(MD380Data.Contacts,null))
             {
-                foreach (Contact ct in MD380Data.Contacts)
+                dataGridViewContacts.Enabled = true;
+                for (int i=1;i<=MD380Data.Contacts.Count;i++)
                 {
+                    Contact ct = MD380Data.Contacts[i-1];
                     if (ct.CallType != "BLANK")
                     {
-                        dataGridViewContacts.Rows.Add(ct.GUID.ToString(), ct.Name, ct.CallType, ct.CallID, ct.receiveTone);
+                        dataGridViewContacts.Rows.Add(i, ct.GUID.ToString(), ct.Name, ct.CallType, ct.CallID, ct.receiveTone);
                         if (ct.CallType == "All Call")
                         {
-                            dataGridViewContacts.Rows[dataGridViewContacts.Rows.Count - 1].Cells[3].ReadOnly = true;
-                            dataGridViewContacts.Rows[dataGridViewContacts.Rows.Count - 1].Cells[3].Style.BackColor = Color.LightGray;
+                            dataGridViewContacts.Rows[i - 1].Cells[4].ReadOnly = true;
+                            dataGridViewContacts.Rows[i - 1].Cells[4].Style.BackColor = Color.LightGray;
                         }
                     }
                 }
@@ -331,7 +332,7 @@ namespace MD380_Manager
         }
         void ctDelete_Click(object sender, EventArgs e)
         {
-            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.SelectedRows[0].Cells[0].Value.ToString())).FirstOrDefault();
+            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.SelectedRows[0].Cells[1].Value.ToString())).FirstOrDefault();
             DialogResult dialogResult = MessageBox.Show("Are You Sure?", "Delete "+ct.Name, MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
@@ -348,14 +349,14 @@ namespace MD380_Manager
         }
         void mvContactDown_Click(object sender, EventArgs e)
         {
-            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.SelectedRows[0].Cells[0].Value.ToString())).FirstOrDefault();
+            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.SelectedRows[0].Cells[1].Value.ToString())).FirstOrDefault();
             MD380Data.Contacts.Remove(ct);
             MD380Data.Contacts.Insert(dataGridViewContacts.SelectedRows[0].Index + 1, ct);
             loadContacts(dataGridViewContacts.SelectedRows[0].Index+1);
         }
         void mvContactUp_Click(object sender, EventArgs e)
         {
-            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.SelectedRows[0].Cells[0].Value.ToString())).FirstOrDefault();
+            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.SelectedRows[0].Cells[1].Value.ToString())).FirstOrDefault();
             MD380Data.Contacts.Remove(ct);
             MD380Data.Contacts.Insert(dataGridViewContacts.SelectedRows[0].Index - 1, ct);
             loadContacts(dataGridViewContacts.SelectedRows[0].Index-1);
@@ -373,51 +374,87 @@ namespace MD380_Manager
         }
         void dataGridViewContacts_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.Rows[e.RowIndex].Cells[0].Value.ToString())).FirstOrDefault();
-            if (!object.Equals(ct, null))
+            if (!object.Equals(dataGridViewContacts.Rows[e.RowIndex].Cells[1].Value,null) && !object.Equals(MD380Data.Contacts, null))
             {
-                switch (e.ColumnIndex)
-                {
-                    case 1:
-                        // Name
-                        ct.Name = dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                        break;
-                    case 2:
-                        // Call Type
-                        ct.CallType = dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                        if (ct.CallType == "All Call")
-                        {
-                            dataGridViewContacts.Rows[e.RowIndex].Cells[3].ReadOnly = true;
-                            dataGridViewContacts.Rows[e.RowIndex].Cells[3].Style.BackColor = Color.LightGray;
-                        }
-                        else
-                        {
-                            dataGridViewContacts.Rows[e.RowIndex].Cells[3].ReadOnly = false;
-                            dataGridViewContacts.Rows[e.RowIndex].Cells[3].Style.BackColor = Color.White;
-                        }
-                        break;
-                    case 3:
-                        // Call ID
-                        int newID = Convert.ToInt32(dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
-                        if (ct.CallID != newID)
-                        {
-                            if (MD380Data.Contacts.Any(c => c.CallID == newID))
+                Guid guid = new Guid(dataGridViewContacts.Rows[e.RowIndex].Cells[1].Value.ToString());
+                if (MD380Data.Contacts.Any(c => c.GUID == guid)) 
+                { 
+                    Contact ct = MD380Data.Contacts.Where(c => c.GUID == guid).FirstOrDefault();
+                    switch (e.ColumnIndex)
+                    {
+                        case 2:
+                            // Name
+                            ct.Name = dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                            break;
+                        case 3:
+                            // Call Type
+                            ct.CallType = dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                            if (ct.CallType == "All Call")
                             {
-                                displayMessage("This Call ID " + newID.ToString() + " Already Exists!");
-                                dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = ct.CallID;
+                                dataGridViewContacts.Rows[e.RowIndex].Cells[4].ReadOnly = true;
+                                dataGridViewContacts.Rows[e.RowIndex].Cells[4].Style.BackColor = Color.LightGray;
                             }
                             else
                             {
-                                ct.CallID = newID;
+                                dataGridViewContacts.Rows[e.RowIndex].Cells[4].ReadOnly = false;
+                                dataGridViewContacts.Rows[e.RowIndex].Cells[4].Style.BackColor = Color.White;
                             }
-                        }
-                        break;
-                    case 4:
-                        // Receive Tone
-                        ct.receiveTone = (bool)dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                        break;
+                            break;
+                        case 4:
+                            // Call ID
+                            int newID = Convert.ToInt32(dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                            if (ct.CallID != newID)
+                            {
+                                if (MD380Data.Contacts.Any(c => c.CallID == newID))
+                                {
+                                    displayMessage("This Call ID " + newID.ToString() + " Already Exists!");
+                                    dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = ct.CallID;
+                                }
+                                else
+                                {
+                                    ct.CallID = newID;
+                                }
+                            }
+                            break;
+                        case 5:
+                            // Receive Tone
+                            ct.receiveTone = (bool)dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                            break;
+                    }
                 }
             }
+        }
+        void dataGridViewContacts_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            Contact ct = new Contact();
+            ct.GUID = Guid.NewGuid();
+            MD380Data.Contacts.Add(ct);
+            e.Row.Cells[0].Value = dataGridViewContacts.Rows.Count;
+            e.Row.Cells[1].Value = ct.GUID.ToString();
+            e.Row.Cells[3].Value = "Group Call";
+            e.Row.Cells[4].Value = getLastID();
+            e.Row.Cells[5].Value = false;
+        }
+        private bool checkID(int ID)
+        {
+            bool found = false;
+            foreach (Contact ct in MD380Data.Contacts)
+            {
+                if (ct.CallID == ID)
+                {
+                    found = true;
+                }
+            }
+            return found;
+        } 
+        private int getLastID()
+        {
+            int i = 1;
+            while (checkID(i))
+            {
+                i++;
+            }
+            return i;
         }
         #endregion
 

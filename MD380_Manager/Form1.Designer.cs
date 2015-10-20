@@ -151,11 +151,6 @@ namespace MD380_Manager
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dataGridViewContacts = new System.Windows.Forms.DataGridView();
-            this.GUID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ContactName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CallType = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.CallID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CallRecTone = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnGrpLstMoveDown = new System.Windows.Forms.Button();
             this.btnGrpLstMoveUp = new System.Windows.Forms.Button();
@@ -284,6 +279,12 @@ namespace MD380_Manager
             this.lstChannels = new System.Windows.Forms.ListBox();
             this.numericCallToneAlertDurationUpDown1 = new MD380_Manager.NumericCallToneAlertDurationUpDown();
             this.numericMenuHangTimeUpDown1 = new MD380_Manager.CustomControls.NumericMenuHangTimeUpDown();
+            this.No = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.GUID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ContactName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CallType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.CallID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CallRecTone = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -1695,7 +1696,6 @@ namespace MD380_Manager
             // 
             // dataGridViewContacts
             // 
-            this.dataGridViewContacts.AllowUserToAddRows = false;
             this.dataGridViewContacts.AllowUserToDeleteRows = false;
             this.dataGridViewContacts.AllowUserToOrderColumns = true;
             this.dataGridViewContacts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
@@ -1709,11 +1709,13 @@ namespace MD380_Manager
             this.dataGridViewContacts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridViewContacts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewContacts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.No,
             this.GUID,
             this.ContactName,
             this.CallType,
             this.CallID,
             this.CallRecTone});
+            this.dataGridViewContacts.Enabled = false;
             this.dataGridViewContacts.Location = new System.Drawing.Point(9, 7);
             this.dataGridViewContacts.MultiSelect = false;
             this.dataGridViewContacts.Name = "dataGridViewContacts";
@@ -1728,45 +1730,6 @@ namespace MD380_Manager
             this.dataGridViewContacts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewContacts.Size = new System.Drawing.Size(787, 556);
             this.dataGridViewContacts.TabIndex = 0;
-            // 
-            // GUID
-            // 
-            this.GUID.HeaderText = "GUID";
-            this.GUID.Name = "GUID";
-            this.GUID.Visible = false;
-            // 
-            // ContactName
-            // 
-            this.ContactName.DataPropertyName = "Name";
-            this.ContactName.HeaderText = "Contact Name";
-            this.ContactName.Name = "ContactName";
-            this.ContactName.Width = 150;
-            // 
-            // CallType
-            // 
-            this.CallType.DataPropertyName = "CallType";
-            this.CallType.HeaderText = "Call Type";
-            this.CallType.Items.AddRange(new object[] {
-            "Group Call",
-            "Private Call",
-            "All Call"});
-            this.CallType.Name = "CallType";
-            this.CallType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.CallType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // CallID
-            // 
-            this.CallID.DataPropertyName = "CallID";
-            this.CallID.HeaderText = "Call ID";
-            this.CallID.Name = "CallID";
-            // 
-            // CallRecTone
-            // 
-            this.CallRecTone.DataPropertyName = "receiveTone";
-            this.CallRecTone.HeaderText = "Call Recieve Tone";
-            this.CallRecTone.Name = "CallRecTone";
-            this.CallRecTone.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.CallRecTone.Width = 120;
             // 
             // tabPage2
             // 
@@ -3768,6 +3731,52 @@ namespace MD380_Manager
             0,
             0});
             // 
+            // No
+            // 
+            this.No.HeaderText = "#";
+            this.No.Name = "No";
+            this.No.ReadOnly = true;
+            this.No.Width = 70;
+            // 
+            // GUID
+            // 
+            this.GUID.HeaderText = "GUID";
+            this.GUID.Name = "GUID";
+            this.GUID.Visible = false;
+            // 
+            // ContactName
+            // 
+            this.ContactName.DataPropertyName = "Name";
+            this.ContactName.HeaderText = "Contact Name";
+            this.ContactName.Name = "ContactName";
+            this.ContactName.Width = 150;
+            // 
+            // CallType
+            // 
+            this.CallType.DataPropertyName = "CallType";
+            this.CallType.HeaderText = "Call Type";
+            this.CallType.Items.AddRange(new object[] {
+            "Group Call",
+            "Private Call",
+            "All Call"});
+            this.CallType.Name = "CallType";
+            this.CallType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.CallType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // CallID
+            // 
+            this.CallID.DataPropertyName = "CallID";
+            this.CallID.HeaderText = "Call ID";
+            this.CallID.Name = "CallID";
+            // 
+            // CallRecTone
+            // 
+            this.CallRecTone.DataPropertyName = "receiveTone";
+            this.CallRecTone.HeaderText = "Call Recieve Tone";
+            this.CallRecTone.Name = "CallRecTone";
+            this.CallRecTone.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.CallRecTone.Width = 120;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4082,6 +4091,7 @@ namespace MD380_Manager
         private System.Windows.Forms.ComboBox cmboSLPriorityA;
         private System.Windows.Forms.Label label62;
         private System.Windows.Forms.DataGridView dataGridViewContacts;
+        private System.Windows.Forms.DataGridViewTextBoxColumn No;
         private System.Windows.Forms.DataGridViewTextBoxColumn GUID;
         private System.Windows.Forms.DataGridViewTextBoxColumn ContactName;
         private System.Windows.Forms.DataGridViewComboBoxColumn CallType;
