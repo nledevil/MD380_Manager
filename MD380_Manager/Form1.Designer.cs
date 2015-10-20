@@ -30,7 +30,8 @@ namespace MD380_Manager
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -149,6 +150,12 @@ namespace MD380_Manager
             this.lblMenuHangTime = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.dataGridViewContacts = new System.Windows.Forms.DataGridView();
+            this.GUID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ContactName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CallType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.CallID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CallRecTone = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnGrpLstMoveDown = new System.Windows.Forms.Button();
             this.btnGrpLstMoveUp = new System.Windows.Forms.Button();
@@ -305,6 +312,7 @@ namespace MD380_Manager
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewContacts)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -343,21 +351,21 @@ namespace MD380_Manager
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1676,6 +1684,7 @@ namespace MD380_Manager
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.dataGridViewContacts);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -1683,6 +1692,81 @@ namespace MD380_Manager
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Contacts";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewContacts
+            // 
+            this.dataGridViewContacts.AllowUserToAddRows = false;
+            this.dataGridViewContacts.AllowUserToDeleteRows = false;
+            this.dataGridViewContacts.AllowUserToOrderColumns = true;
+            this.dataGridViewContacts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewContacts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridViewContacts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewContacts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.GUID,
+            this.ContactName,
+            this.CallType,
+            this.CallID,
+            this.CallRecTone});
+            this.dataGridViewContacts.Location = new System.Drawing.Point(9, 7);
+            this.dataGridViewContacts.MultiSelect = false;
+            this.dataGridViewContacts.Name = "dataGridViewContacts";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewContacts.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridViewContacts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewContacts.Size = new System.Drawing.Size(787, 556);
+            this.dataGridViewContacts.TabIndex = 0;
+            // 
+            // GUID
+            // 
+            this.GUID.HeaderText = "GUID";
+            this.GUID.Name = "GUID";
+            this.GUID.Visible = false;
+            // 
+            // ContactName
+            // 
+            this.ContactName.DataPropertyName = "Name";
+            this.ContactName.HeaderText = "Contact Name";
+            this.ContactName.Name = "ContactName";
+            this.ContactName.Width = 150;
+            // 
+            // CallType
+            // 
+            this.CallType.DataPropertyName = "CallType";
+            this.CallType.HeaderText = "Call Type";
+            this.CallType.Items.AddRange(new object[] {
+            "Group Call",
+            "Private Call",
+            "All Call"});
+            this.CallType.Name = "CallType";
+            this.CallType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.CallType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // CallID
+            // 
+            this.CallID.DataPropertyName = "CallID";
+            this.CallID.HeaderText = "Call ID";
+            this.CallID.Name = "CallID";
+            // 
+            // CallRecTone
+            // 
+            this.CallRecTone.DataPropertyName = "receiveTone";
+            this.CallRecTone.HeaderText = "Call Recieve Tone";
+            this.CallRecTone.Name = "CallRecTone";
+            this.CallRecTone.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.CallRecTone.Width = 120;
             // 
             // tabPage2
             // 
@@ -3728,6 +3812,7 @@ namespace MD380_Manager
             this.groupBox5.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewContacts)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -3996,6 +4081,12 @@ namespace MD380_Manager
         private System.Windows.Forms.Label label61;
         private System.Windows.Forms.ComboBox cmboSLPriorityA;
         private System.Windows.Forms.Label label62;
+        private System.Windows.Forms.DataGridView dataGridViewContacts;
+        private System.Windows.Forms.DataGridViewTextBoxColumn GUID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ContactName;
+        private System.Windows.Forms.DataGridViewComboBoxColumn CallType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CallID;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn CallRecTone;
     }
 }
 

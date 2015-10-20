@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.Exchange.WebServices.Data;
 
 namespace MD380_Manager
 {
@@ -40,16 +40,11 @@ namespace MD380_Manager
             cmboGnKeypadLockTime.SelectedItem = "Manual";
             cmboGnIntroScreen.SelectedItem = "Picture";
 
-            // Contacts Tab
-            /*cntContextMenu = new RadContextMenu();
-            RadMenuItem mvUp = new RadMenuItem();
-            mvUp.Text = "Move Up";
-            mvUp.Click += new EventHandler(cntMoveUp);
-            cntContextMenu.Items.Add(mvUp);
-            RadMenuItem mvDwn = new RadMenuItem();
-            mvDwn.Text = "Move Down";
-            mvDwn.Click += new EventHandler(cntMoveDown);
-            cntContextMenu.Items.Add(mvDwn);*/
+            // Contacts
+            dataGridViewContacts.MouseClick += dataGridViewContacts_MouseClick;
+            dataGridViewContacts.CellValueChanged += dataGridViewContacts_CellValueChanged;
+            dataGridViewContacts.CellContentClick += dataGridViewContacts_CellContentClick;
+            dataGridViewContacts.CurrentCellDirtyStateChanged += dataGridViewContacts_CurrentCellDirtyStateChanged;
 
             // Channels Tab
             cmboCHTOTRekeyDelay.Items.Clear();
@@ -58,14 +53,15 @@ namespace MD380_Manager
 
                 initChannels();
         }
+
+        
         private void refreshScreens()
         {
             initScanLists();
-
             loadBasicInfo();
             loadGeneralSettings();
             loadMenuItems();
-            loadContacts();
+            loadContacts(-1);
             loadGroups(-1);
             loadZones(-1);
             loadScanLists(-1);
@@ -275,79 +271,154 @@ namespace MD380_Manager
         #endregion
 
         #region Contacts
-        private void loadContacts()
+        private void loadContacts(int idx)
         {
-            //radGridContacts.DataSource = MD380Data.Contacts.Where(a =>a.CallType != "BLANK");
-        }
-        /*void radGridContacts_DataBindingComplete(object sender, Telerik.WinControls.UI.GridViewBindingCompleteEventArgs e)
-        {
-            foreach (GridViewRowInfo row in radGridContacts.Rows)
+            dataGridViewContacts.Rows.Clear();
+            if (!object.Equals(MD380Data.Contacts,null))
             {
-                if (row.Cells[1].Value == "ALL CALL")
+                foreach (Contact ct in MD380Data.Contacts)
                 {
-                    // 16777215
-                    row.Cells[2].ReadOnly = true;
-                }
-            }
-        }
-        void radGridContacts_ContextMenuOpening(object sender, Telerik.WinControls.UI.ContextMenuOpeningEventArgs e)
-        {
-            if (radGridContacts.CurrentRow.Index <= 0)
-                cntContextMenu.Items[0].Enabled = false;
-            else
-                cntContextMenu.Items[0].Enabled = true;
-
-        }
-                        
-                        if (cnt.CallID.ToString() == newVal && cnt.CallType == callType)
+                    if (ct.CallType != "BLANK")
+                    {
+                        dataGridViewContacts.Rows.Add(ct.GUID.ToString(), ct.Name, ct.CallType, ct.CallID, ct.receiveTone);
+                        if (ct.CallType == "All Call")
                         {
-                            e.Cancel = true;
-                            MessageBox.Show("ID Already Exists", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            dataGridViewContacts.Rows[dataGridViewContacts.Rows.Count - 1].Cells[3].ReadOnly = true;
+                            dataGridViewContacts.Rows[dataGridViewContacts.Rows.Count - 1].Cells[3].Style.BackColor = Color.LightGray;
                         }
                     }
-                    break;
-                case 3:
-                    // Contact Receive Tone
-                    break;
+                }
             }
-            
-        }
-        void cntMoveUp(object sender, EventArgs e)
-        {
-            int idx = radGridContacts.CurrentRow.Index;
-            if (idx > 0)
+            if (idx > -1)
             {
-                Contact cnt = MD380Data.Contacts[idx];
-                MD380Data.Contacts.RemoveAt(idx);
-                MD380Data.Contacts.Insert(idx - 1, cnt);
-                loadContacts();
-                radGridContacts.Rows[idx - 1].IsSelected = true;
-                radGridContacts.Rows[idx - 1].IsCurrent = true;
-                GridTableElement tblEl = this.radGridContacts.CurrentView as GridTableElement;
-                if (tblEl != null && radGridContacts.CurrentRow != null)
+                dataGridViewContacts.Rows[idx].Selected = true;
+            }
+        }
+        private void dataGridViewContacts_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                dataGridViewContacts.ClearSelection();
+                int currentMouseOverRow = dataGridViewContacts.HitTest(e.X, e.Y).RowIndex;
+                if (currentMouseOverRow > -1)
                 {
-                    tblEl.ScrollToRow(radGridContacts.CurrentRow);
+                    if (!object.Equals(dataGridViewContacts.Rows[currentMouseOverRow].Cells[0].Value,null))
+                    {
+                        dataGridViewContacts.Rows[currentMouseOverRow].Selected = true;
+                        string rowName = dataGridViewContacts.Rows[currentMouseOverRow].Cells[1].Value.ToString();
+                        ContextMenu m = new ContextMenu();
+                        if (currentMouseOverRow > 0)
+                        {
+                            MenuItem mvContactUp = new MenuItem("Move " + rowName + " Up");
+                            mvContactUp.Click += mvContactUp_Click;
+                            m.MenuItems.Add(mvContactUp);
+                        }
+
+                        if (currentMouseOverRow < (dataGridViewContacts.Rows.Count - 2))
+                        {
+                            MenuItem mvContactDown = new MenuItem("Move " + rowName + " Down");
+                            mvContactDown.Click += mvContactDown_Click;
+                            m.MenuItems.Add(mvContactDown);
+                        }
+                        MenuItem ctDelete = new MenuItem("Delete " + rowName);
+                        ctDelete.Click += ctDelete_Click;
+                        m.MenuItems.Add(ctDelete);
+
+                        m.Show(dataGridViewContacts, new Point(e.X, e.Y));
+                    }
                 }
             }
         }
-        void cntMoveDown(object sender, EventArgs e)
+        void ctDelete_Click(object sender, EventArgs e)
         {
-            int idx = radGridContacts.CurrentRow.Index;
-            if (idx < (radGridContacts.Rows.Count - 1))
+            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.SelectedRows[0].Cells[0].Value.ToString())).FirstOrDefault();
+            DialogResult dialogResult = MessageBox.Show("Are You Sure?", "Delete "+ct.Name, MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                Contact cnt = MD380Data.Contacts[idx];
-                MD380Data.Contacts.RemoveAt(idx);
-                MD380Data.Contacts.Insert(idx + 1, cnt);
-                loadContacts();
-                radGridContacts.Rows[idx + 1].IsSelected = true;
-                radGridContacts.Rows[idx + 1].IsCurrent = true;
-                GridTableElement tblEl = this.radGridContacts.CurrentView as GridTableElement;
-                if (tblEl != null && radGridContacts.CurrentRow != null)
+                // Delete Row
+                
+                int idx = dataGridViewContacts.SelectedRows[0].Index;
+                if (idx >= (dataGridViewContacts.Rows.Count-1))
                 {
-                    tblEl.ScrollToRow(radGridContacts.CurrentRow);
+                    idx = dataGridViewContacts.Rows.Count - 2;
+                }
+                MD380Data.Contacts.Remove(ct);
+                loadContacts(idx);
+            }
+        }
+        void mvContactDown_Click(object sender, EventArgs e)
+        {
+            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.SelectedRows[0].Cells[0].Value.ToString())).FirstOrDefault();
+            MD380Data.Contacts.Remove(ct);
+            MD380Data.Contacts.Insert(dataGridViewContacts.SelectedRows[0].Index + 1, ct);
+            loadContacts(dataGridViewContacts.SelectedRows[0].Index+1);
+        }
+        void mvContactUp_Click(object sender, EventArgs e)
+        {
+            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.SelectedRows[0].Cells[0].Value.ToString())).FirstOrDefault();
+            MD380Data.Contacts.Remove(ct);
+            MD380Data.Contacts.Insert(dataGridViewContacts.SelectedRows[0].Index - 1, ct);
+            loadContacts(dataGridViewContacts.SelectedRows[0].Index-1);
+        }
+        void dataGridViewContacts_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (this.dataGridViewContacts.IsCurrentCellDirty)
+            {
+                dataGridViewContacts.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+        void dataGridViewContacts_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            dataGridViewContacts_CellValueChanged(sender, e);
+        }
+        void dataGridViewContacts_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            Contact ct = MD380Data.Contacts.Where(c => c.GUID == new Guid(dataGridViewContacts.Rows[e.RowIndex].Cells[0].Value.ToString())).FirstOrDefault();
+            if (!object.Equals(ct, null))
+            {
+                switch (e.ColumnIndex)
+                {
+                    case 1:
+                        // Name
+                        ct.Name = dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                        break;
+                    case 2:
+                        // Call Type
+                        ct.CallType = dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                        if (ct.CallType == "All Call")
+                        {
+                            dataGridViewContacts.Rows[e.RowIndex].Cells[3].ReadOnly = true;
+                            dataGridViewContacts.Rows[e.RowIndex].Cells[3].Style.BackColor = Color.LightGray;
+                        }
+                        else
+                        {
+                            dataGridViewContacts.Rows[e.RowIndex].Cells[3].ReadOnly = false;
+                            dataGridViewContacts.Rows[e.RowIndex].Cells[3].Style.BackColor = Color.White;
+                        }
+                        break;
+                    case 3:
+                        // Call ID
+                        int newID = Convert.ToInt32(dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                        if (ct.CallID != newID)
+                        {
+                            if (MD380Data.Contacts.Any(c => c.CallID == newID))
+                            {
+                                displayMessage("This Call ID " + newID.ToString() + " Already Exists!");
+                                dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = ct.CallID;
+                            }
+                            else
+                            {
+                                ct.CallID = newID;
+                            }
+                        }
+                        break;
+                    case 4:
+                        // Receive Tone
+                        ct.receiveTone = (bool)dataGridViewContacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                        break;
                 }
             }
-        }*/
+        }
         #endregion
 
         #region Group Lists
@@ -1019,6 +1090,10 @@ namespace MD380_Manager
         #endregion
 
         #region Misc
+        private void displayMessage(string message)
+        {
+            MessageBox.Show(message);
+        }
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Displays an OpenFileDialog so the user can select a Cursor.

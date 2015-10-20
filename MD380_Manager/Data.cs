@@ -717,7 +717,7 @@ namespace MD380_Manager
                     // Call Tone and Call Type
                     string ct = btoh(cn[3]);
                     con.receiveTone = ct.Substring(0, 1) == "C" ? false : true;
-                    con.CallType = (ct.Substring(1, 1) == "1" ? "GROUP" : (ct.Substring(1, 1) == "2" ? "PRIVATE" : (ct.Substring(1, 1) == "3" ? "ALL CALL" : "BLANK")));
+                    con.CallType = (ct.Substring(1, 1) == "1" ? "Group Call" : (ct.Substring(1, 1) == "2" ? "Private Call" : (ct.Substring(1, 1) == "3" ? "All Call" : "BLANK")));
 
                     // Contact Name
                     con.Name = batoa(cn.Slice(4, _cn_len - 4));
